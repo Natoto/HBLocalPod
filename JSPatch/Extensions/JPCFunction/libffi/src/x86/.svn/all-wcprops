@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/repos/!svn/ver/1519276/src/dwmobile/fenda/ios/tags/FENDA-IOS_1.0.7_REVIEW1/LocalPod/JSPatch/Extensions/JPCFunction/libffi/src/x86
+END
+win32_i386.S
+K 25
+svn:wc:ra_dav:version-url
+V 143
+/repos/!svn/ver/1519276/src/dwmobile/fenda/ios/tags/FENDA-IOS_1.0.7_REVIEW1/LocalPod/JSPatch/Extensions/JPCFunction/libffi/src/x86/win32_i386.S
+END
+darwin64_x86_64.S
+K 25
+svn:wc:ra_dav:version-url
+V 148
+/repos/!svn/ver/1519276/src/dwmobile/fenda/ios/tags/FENDA-IOS_1.0.7_REVIEW1/LocalPod/JSPatch/Extensions/JPCFunction/libffi/src/x86/darwin64_x86_64.S
+END
+ffi64_x86_64.c
+K 25
+svn:wc:ra_dav:version-url
+V 145
+/repos/!svn/ver/1519276/src/dwmobile/fenda/ios/tags/FENDA-IOS_1.0.7_REVIEW1/LocalPod/JSPatch/Extensions/JPCFunction/libffi/src/x86/ffi64_x86_64.c
+END
+darwin_i386.S
+K 25
+svn:wc:ra_dav:version-url
+V 144
+/repos/!svn/ver/1519276/src/dwmobile/fenda/ios/tags/FENDA-IOS_1.0.7_REVIEW1/LocalPod/JSPatch/Extensions/JPCFunction/libffi/src/x86/darwin_i386.S
+END
+ffi_i386.c
+K 25
+svn:wc:ra_dav:version-url
+V 141
+/repos/!svn/ver/1519276/src/dwmobile/fenda/ios/tags/FENDA-IOS_1.0.7_REVIEW1/LocalPod/JSPatch/Extensions/JPCFunction/libffi/src/x86/ffi_i386.c
+END
