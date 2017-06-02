@@ -154,6 +154,19 @@
     // Dispose of any resources that can be recreated.
 }
 
+-(NSInteger)countDataDictionaryForSection:(NSInteger)section
+{
+    __block NSInteger count = 0;
+    NSMutableArray * sectionkeys = [NSMutableArray new];
+    [self.dataDictionary.allKeys enumerateObjectsUsingBlock:^(NSString * sectionrowkey, NSUInteger idx, BOOL * stop) {
+        NSString * sectionstr = KEY_SECTION_INDEX_STR(sectionrowkey);
+        if (sectionstr && sectionstr.integerValue == section) {
+            count++;
+        }
+    }];
+    return count;
+}
+
 -(void)removeDataDictionaryForSection:(NSInteger)section
 {
     NSMutableArray * sectionkeys = [NSMutableArray new];

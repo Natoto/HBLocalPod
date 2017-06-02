@@ -66,7 +66,7 @@
     NSString *utf8String = self.shareUrl;
     NSString *theTitle = self.shareTitle;
     NSString *description = self.shareText;
-    NSData *imageData = UIImageJPEGRepresentation(SHARE_IMG, SHARE_IMG_COMPRESSION_QUALITY);
+    NSData *imageData = UIImageJPEGRepresentation(self.thumeImage, SHARE_IMG_COMPRESSION_QUALITY);
     
     QQApiNewsObject *newsObj = [QQApiNewsObject
                                 objectWithURL:[NSURL URLWithString:utf8String]

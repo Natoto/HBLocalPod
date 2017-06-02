@@ -80,7 +80,7 @@ static inline dispatch_queue_t YYImageCacheDecodeQueue() {
     dispatch_once(&onceToken, ^{
         NSString *cachePath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory,
                                                                    NSUserDomainMask, YES) firstObject];
-        cachePath = [cachePath stringByAppendingPathComponent:@"com.ibireme.yykit"];
+        cachePath = [cachePath stringByAppendingPathComponent:@"com.hiido.image"];
         cachePath = [cachePath stringByAppendingPathComponent:@"images"];
         cache = [[self alloc] initWithPath:cachePath];
     });
@@ -128,7 +128,7 @@ static inline dispatch_queue_t YYImageCacheDecodeQueue() {
             } else {
                 dispatch_async(YYImageCacheDecodeQueue(), ^{
                     __strong typeof(_self) self = _self;
-                    if (!self) return;
+                    if (!self) return; 
                     [self.memoryCache setObject:[image yy_imageByDecoded] forKey:key withCost:[self imageCost:image]];
                 });
             }

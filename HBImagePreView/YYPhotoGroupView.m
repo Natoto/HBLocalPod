@@ -146,7 +146,7 @@
     
     
     [self setZoomScale:1.0 animated:NO];
-    self.maximumZoomScale = 1;
+    self.maximumZoomScale = 3;
 
     [_imageView yy_cancelCurrentImageRequest];
     [_imageView.layer removePreviousFadeAnimation];
@@ -264,10 +264,20 @@
 
 @property (nonatomic, strong) UIPanGestureRecognizer *panGesture;
 @property (nonatomic, assign) CGPoint panGestureBeginPoint;
+
+@property (nonatomic, strong) UIImageView * panImageView;
+
 @end
 
 @implementation YYPhotoGroupView
 
+-(UIImageView *)panImageView{
+    if (!_panImageView) {
+        _panImageView = [UIImageView new];
+        [self addSubview:_panImageView];
+    }
+    return _panImageView;
+}
 - (NSString *)machineModel {
     static dispatch_once_t one;
     static NSString *model;
@@ -368,6 +378,8 @@
     _scrollView.delegate = self;
     _scrollView.scrollsToTop = NO;
     _scrollView.pagingEnabled = YES;
+    _scrollView.maximumZoomScale = 1.0f;
+    _scrollView.minimumZoomScale = 0.3f;
     _scrollView.alwaysBounceHorizontal = groupItems.count > 1;
     _scrollView.showsHorizontalScrollIndicator = NO;
     _scrollView.showsVerticalScrollIndicator = NO;
@@ -408,7 +420,8 @@
                     animated:(BOOL)animated
                   completion:(void (^)(void))completion {
     if (!toContainer) return;
-    
+     
+    self.isshow = YES;
     _fromView = fromView;
     _toContainerView = toContainer;
     
@@ -568,6 +581,7 @@
         }completion:^(BOOL finished) {
             self.scrollView.layer.transformScale = 1;
             [self removeFromSuperview];
+            self.isshow = NO;
             [self cancelAllImageLoad];
             if (completion) completion();
         }];
@@ -612,6 +626,7 @@
         } completion:^(BOOL finished) {
             cell.imageContainerView.layer.anchorPoint = CGPointMake(0.5, 0.5);
             [self removeFromSuperview];
+            self.isshow = NO;
             if (completion) completion();
         }];
     }];
@@ -803,18 +818,115 @@
         type != YYImageTypeGIF) {
         imageItem = tile.imageView.image;
     }
+    [[NSNotificationCenter defaultCenter] postNotificationName:notify_yyphotogroupview_longpress object:imageItem];
     
-    UIActivityViewController *activityViewController =
-    [[UIActivityViewController alloc] initWithActivityItems:@[imageItem] applicationActivities:nil];
-    
-    UIViewController *toVC = self.toContainerView.viewController;
-    if (!toVC) toVC = self.viewController;
-    [toVC presentViewController:activityViewController animated:YES completion:nil];
+    if (self.canshareImage) {
+        UIActivityViewController *activityViewController =
+        [[UIActivityViewController alloc] initWithActivityItems:@[imageItem] applicationActivities:nil];
+        
+        UIViewController *toVC = self.toContainerView.viewController;
+        if (!toVC) toVC = self.viewController;
+        [toVC presentViewController:activityViewController animated:YES completion:nil];
+    }
+
 }
 
 #ifndef YY_CLAMP // return the clamped value
 #define YY_CLAMP(_x_, _low_, _high_)  (((_x_) > (_high_)) ? (_high_) : (((_x_) < (_low_)) ? (_low_) : (_x_)))
 #endif
+
+-(void)viewbeginpan:(UIPanGestureRecognizer *)sender{
+    
+    if (self.pinShowlayerMask) {
+        self.scrollView.backgroundColor  = [UIColor colorWithWhite:0 alpha:0.1];
+    }
+    else{
+        
+        YYPhotoGroupCell * cell = [self cellForPage:[self currentPage]];
+        [self bringSubviewToFront:self.panImageView];
+        self.panImageView.image = cell.imageView.image;
+        self.scrollView.hidden = YES;
+        self.panImageView.hidden = NO;
+        self.panImageView.layer.masksToBounds = YES;
+        CGRect frame = [cell.imageView.superview convertRect:cell.imageView.frame toView:self];
+        self.panImageView.contentMode = cell.imageView.contentMode;
+        self.panImageView.frame = frame;
+        CGFloat width = self.fromView.size.width;
+        [UIView animateWithDuration:0.3 animations:^{
+             self.panImageView.size = CGSizeMake(width, width);
+            self.panImageView.layer.cornerRadius = width/2;
+        }];
+    }
+}
+
+-(BOOL)pinShowlayerMask{
+    return YES;
+}
+-(void)viewchangepan:(UIPanGestureRecognizer *)sender {
+    
+    if (self.pinShowlayerMask) {
+        CGFloat width = _fromView.size.width*2;
+        UIView *mask =  [[UIView alloc] initWithFrame:CGRectMake(0, 0, width, width)];
+        mask.layer.cornerRadius = width/2.;
+        mask.layer.masksToBounds = YES;
+        mask.backgroundColor = [UIColor blackColor];
+        mask.center = [sender locationInView:self.scrollView];
+        self.scrollView.maskView = mask;
+   
+    }
+    else{
+        UIView *draggableObj = self.panImageView;
+        CGPoint changepoint = [sender locationInView:self];
+        [draggableObj setCenter:changepoint];
+    }
+}
+
+-(void)viewendpan:(UIPanGestureRecognizer *)g{
+    
+    if (self.pinShowlayerMask) {
+        
+        CGRect fromframe = [self.fromView.superview convertRect:self.fromView.frame toView:self.scrollView];
+        self.scrollView.maskView.layer.cornerRadius = _fromView.size.width/2;
+        
+        [UIView animateWithDuration:0.5 animations:^{
+            self.scrollView.maskView.frame = fromframe;
+        } completion:^(BOOL finished) {
+            self.scrollView.maskView.frame = fromframe;
+            [self removeFromSuperview];
+            self.isshow = NO;
+        }];
+    }
+    else{
+        
+        CGRect fromframe = [self.fromView.superview convertRect:self.fromView.frame toView:self];
+        [UIView animateWithDuration:0.5 animations:^{
+            self.panImageView.frame = fromframe;
+            self.layer.mask.frame = fromframe;
+        } completion:^(BOOL finished) {
+            self.panImageView.frame = fromframe;
+            self.fromView.hidden = NO;
+            self.panImageView.hidden = YES;
+            [self removeFromSuperview];
+            self.isshow = NO;
+        }];
+    }
+    
+}
+
+-(void)viewend_cancelpan:(UIPanGestureRecognizer *)g{
+    
+//    _panImageView.hidden = YES;
+    //    _scrollView.hidden = NO;
+    self.scrollView.maskView = nil;
+    self.scrollView.hidden = NO;
+    self.panImageView.hidden = YES;
+}
+
+-(void)viewcancelpan:(UIPanGestureRecognizer *)g{
+
+    self.scrollView.maskView = nil;
+}
+
 - (void)pan:(UIPanGestureRecognizer *)g {
     switch (g.state) {
         case UIGestureRecognizerStateBegan: {
@@ -823,17 +935,18 @@
             } else {
                 _panGestureBeginPoint = CGPointZero;
             }
+            [self viewbeginpan:g];
         } break;
         case UIGestureRecognizerStateChanged: {
             if (_panGestureBeginPoint.x == 0 && _panGestureBeginPoint.y == 0) return;
             CGPoint p = [g locationInView:self];
             CGFloat deltaY = p.y - _panGestureBeginPoint.y;
-            _scrollView.top = deltaY;
-            
+//            _scrollView.top = deltaY;
+            [self viewchangepan:g];
             CGFloat alphaDelta = 160;
             CGFloat alpha = (alphaDelta - fabs(deltaY) + 50) / alphaDelta;
-            alpha = YY_CLAMP(alpha, 0, 1);
-            [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionCurveLinear animations:^{
+            alpha = YY_CLAMP(alpha, 0.8, 1);
+            [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionCurveLinear animations:^{
                 _blurBackground.alpha = alpha;
                 _pager.alpha = alpha;
             } completion:nil];
@@ -850,33 +963,15 @@
                 _isPresented = NO;
                 [[UIApplication sharedApplication] setStatusBarHidden:_fromNavigationBarHidden withAnimation:UIStatusBarAnimationFade];
                 
-                BOOL moveToTop = (v.y < - 50 || (v.y < 50 && deltaY < 0));
-                CGFloat vy = fabs(v.y);
-                if (vy < 1) vy = 1;
-                CGFloat duration = (moveToTop ? _scrollView.bottom : self.height - _scrollView.top) / vy;
-                duration *= 0.8;
-                duration = YY_CLAMP(duration, 0.05, 0.3);
-                
-                [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionCurveLinear | UIViewAnimationOptionBeginFromCurrentState animations:^{
-                    _blurBackground.alpha = 0;
-                    _pager.alpha = 0;
-                    if (moveToTop) {
-                        _scrollView.bottom = 0;
-                    } else {
-                        _scrollView.top = self.height;
-                    }
-                } completion:^(BOOL finished) {
-                    [self removeFromSuperview];
-                }];
-                
-                _background.image = _snapshotImage;
-                [_background.layer addFadeAnimationWithDuration:0.3 curve:UIViewAnimationCurveEaseInOut];
-                
+                [self viewendpan:g];
+            
             } else {
                 [UIView animateWithDuration:0.4 delay:0 usingSpringWithDamping:0.9 initialSpringVelocity:v.y / 1000 options:UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionBeginFromCurrentState animations:^{
                     _scrollView.top = 0;
                     _blurBackground.alpha = 1;
                     _pager.alpha = 1;
+                    [self viewend_cancelpan:g];;
+                    
                 } completion:^(BOOL finished) {
                     
                 }];
@@ -891,12 +986,11 @@
     }
 }
 
+
 @end
 
 
 @implementation NSString(yyphoto)
-
-
 
 - (CGSize)sizeForFont:(UIFont *)font size:(CGSize)size mode:(NSLineBreakMode)lineBreakMode {
     CGSize result;

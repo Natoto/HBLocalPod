@@ -23,6 +23,7 @@
         _sharedClient.requestSerializer.timeoutInterval = 20;//设置超时时间20秒
         _sharedClient.securityPolicy = [AFSecurityPolicy defaultPolicy];
         _sharedClient.reachabilityManager = [AFNetworkReachabilityManager sharedManager];
+          
 //        _sharedClient.operationQueue = [[NSOperationQueue alloc] init];
 //        _sharedClient.shouldUseCredentialStorage = YES;
         // 设置请求格式

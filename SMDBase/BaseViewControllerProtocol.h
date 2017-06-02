@@ -61,6 +61,11 @@ static NSString * const  notify_NetworkError= @"notify_NetworkError";
  */
 -(void)config_user_gifheader;
 -(void)config_user_giffooter;
+@end
+
+@interface UIViewController(hbshownewmsg)
 
 - (void)showUpdateNewsCountMessageView:(NSString *)message;
+- (UILabel *)showStatusbarMessageView:(NSString *)message;
+
 @end

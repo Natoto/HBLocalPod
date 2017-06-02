@@ -21,6 +21,12 @@
 
 -(void)presentAlertTitle:(NSString *)title message:(NSString *)message from:(UIViewController *)from block:(void(^)())block;
 
+-(void)presentSheetTitle:(NSString *)title
+                 message:(NSString *)message
+                    from:(UIViewController *)from
+                   block:(void(^)())block
+                  cancel:(void(^)())cancle;
+
 -(void)presentAlertTips:(NSString *)message;
 
 -(MBProgressHUD *)presentMessageTips_:(NSString *)message;
@@ -34,7 +40,7 @@
 -(MBProgressHUD *)presentLoadingTips:(NSString *)message;
 -(void)dismissTips;
 
--(void)presentLoadinghud;
+-(MBProgressHUD *)presentLoadinghud;
 -(void)dismissAllTips;
 
 @end

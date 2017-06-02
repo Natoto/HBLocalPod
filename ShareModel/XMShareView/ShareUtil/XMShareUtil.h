@@ -26,5 +26,5 @@
  */
 @property (nonatomic, strong) NSString *shareUrl;
 
-
+@property (nonatomic, strong) UIImage * thumeImage;
 @end

@@ -8,9 +8,11 @@
 
 #import <UIKit/UIKit.h>
 //#import "MWPhotoBrowser.h"
+@class YYPhotoGroupView;
 
 @interface  UIViewController(ImagesVideoPreView)//<MWPhotoBrowserDelegate>
 
+@property (nonatomic, strong,readonly) YYPhotoGroupView * photogroupvView;
 -(void)showPhotoBrowserWithURLS:(NSArray<NSURL *> *)imageurls;
 -(void)showPhotoBrowserWithURLS:(NSArray<NSURL *> *)imagevideourls CurrentPhotoIndex:(NSInteger)currentPhotoIndex;
 -(void)showPhotoBrowserWithURLS:(NSArray<NSURL *> *)imagevideourls CurrentPhotoIndex:(NSInteger)currentPhotoIndex fromView:(UIView *)fromView;
@@ -19,4 +21,5 @@
  
 -(void)showPhotoBrowserWithImages:(NSArray<UIImage *> *)images CurrentPhotoIndex:(NSInteger)currentPhotoIndex fromView:(UIView *)fromView;
 
+-(UIView *)mycontainer;
 @end

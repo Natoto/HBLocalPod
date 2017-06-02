@@ -15,7 +15,20 @@
 //#import "RootViewController.h"
 
 @implementation  UIViewController(ImagesVideoPreView)
+@dynamic photogroupvView;
+
 char key_photos;
+char key_photos_groupview;
+
+-(void)setPhotogroupvView:(YYPhotoGroupView *)photogroupvView{
+
+    objc_setAssociatedObject(self, &key_photos_groupview, photogroupvView, OBJC_ASSOCIATION_RETAIN);
+
+}
+-(YYPhotoGroupView *)photogroupvView{
+    
+    return objc_getAssociatedObject(self, &key_photos_groupview);
+}
 
 -(void)setmwPhotos:(NSMutableArray *)mwphotos
 {
@@ -54,6 +67,7 @@ char key_photos;
     }
     
     YYPhotoGroupView *v = [[YYPhotoGroupView alloc] initWithGroupItems:items];
+    [self setPhotogroupvView:v]; 
     [v presentFromImageView:fromView toContainer:self.mycontainer fromPage:(int)currentPhotoIndex animated:YES completion:^{
         
     }];
@@ -76,6 +90,8 @@ char key_photos;
     }
     
     YYPhotoGroupView *v = [[YYPhotoGroupView alloc] initWithGroupItems:items];
+  
+    [self setPhotogroupvView:v];
     [v presentFromImageView:fromView toContainer:self.mycontainer fromPage:(int)currentPhotoIndex animated:YES completion:^{
         
     }]; 

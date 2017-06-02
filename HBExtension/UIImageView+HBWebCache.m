@@ -76,7 +76,7 @@
 //    [self sd_setImageWithURL:url forState:state placeholderImage:[UIImage imageNamed:@"nopic.png"] options:0 completed:nil];
     
 //    [self yy_setImageWithURL:url forState:state options:YYWebImageOptionShowNetworkActivity | YYWebImageOptionShowNetworkActivity | YYWebImageOptionSetImageWithFadeAnimation];
-    [self yy_setImageWithURL:url forState:state placeholder:[UIImage imageNamed:@"nopic.png"] options:YYWebImageOptionShowNetworkActivity
+    [self yy_setImageWithURL:url forState:state placeholder:[UIImage imageNamed:@"nopic.png"] options:YYWebImageOptionSetImageWithFadeAnimation
                   completion:^(UIImage *image, NSURL *url, YYWebImageFromType from, YYWebImageStage stage, NSError *error) {
     }];
  

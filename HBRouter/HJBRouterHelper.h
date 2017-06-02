@@ -21,5 +21,11 @@
               forkey:(NSString *)key
           parameters:(NSDictionary *)parameters;
 
++(void)openURLString:(NSString *)URLString forkey:(NSString *)key parameters:(NSDictionary *)parameters;
++(void)openForkey:(NSString *)key  blockViewController:(UIViewController *(^)(void))block ;
+
 -(void)openForkey:(NSString *)key  blockViewController:(UIViewController *(^)(void))block;
+ 
+-(void)openURLString:(NSString *)URLString forkey:(NSString *)key parameters:(NSDictionary *)parameters animate:(BOOL)animate;
+
 @end

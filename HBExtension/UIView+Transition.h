@@ -28,6 +28,18 @@ typedef enum
 @interface UIView(Transition)
 //@property (nonatomic, retain) HBUITransition *	transition;
 
+/**
+ * 渐变切换
+ */
+- (void)startTransitionAnimation;
+
+/**
+ * 放大缩小动画
+ */
+- (void)startDuangAnimation ;
+
+-(void)rotateAnimation;
+
 - (void)transitionFade;
 - (void)transitionFade:(HBUITransitionDirection)from;
 

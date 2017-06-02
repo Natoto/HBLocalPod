@@ -35,7 +35,7 @@
 @property (nonatomic, strong) NSString * browserTitle;
 - (void)loadURL:(NSURL *)URL;
 - (void)loadURLString:(NSString *)URLString;
-
+@property (nonatomic, assign) BOOL showMoreItem;
 + (HBWebBrowserViewController *)locoalwebBrowser;
 + (HBWebBrowserViewController *)webBrowser;
 + (HBWebBrowserViewController *)webBrowserWithConfiguration:(WKWebViewConfiguration *)configuration;

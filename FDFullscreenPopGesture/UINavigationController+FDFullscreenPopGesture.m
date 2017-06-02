@@ -33,12 +33,8 @@
 
 - (BOOL)gestureRecognizerShouldBegin:(UIPanGestureRecognizer *)gestureRecognizer
 {
-    
     // Ignore when no view controller is pushed into the navigation stack.
     if (self.navigationController.viewControllers.count <= 1) {
-        return NO;
-    }
-    if (self.navigationController.hb_viewControllerPopGestureDisable) {
         return NO;
     }
     
@@ -54,7 +50,7 @@
     if (maxAllowedInitialDistance > 0 && beginningLocation.x > maxAllowedInitialDistance) {
         return NO;
     }
-
+    
     // Ignore pan gesture when the navigation controller is currently in transition.
     if ([[self.navigationController valueForKey:@"_isTransitioning"] boolValue]) {
         return NO;
@@ -150,18 +146,22 @@ typedef void (^_FDViewControllerWillAppearInjectBlock)(UIViewController *viewCon
 
 - (void)fd_pushViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
+    if ([self isKindOfClass:NSClassFromString(@"MFMessageComposeViewController")]) {
+        [self fd_pushViewController:viewController animated:animated];
+        return;
+    }
     if (![self.interactivePopGestureRecognizer.view.gestureRecognizers containsObject:self.fd_fullscreenPopGestureRecognizer]) {
         
         // Add our own gesture recognizer to where the onboard screen edge pan gesture recognizer is attached to.
         [self.interactivePopGestureRecognizer.view addGestureRecognizer:self.fd_fullscreenPopGestureRecognizer];
-
+        
         // Forward the gesture events to the private handler of the onboard gesture recognizer.
         NSArray *internalTargets = [self.interactivePopGestureRecognizer valueForKey:@"targets"];
         id internalTarget = [internalTargets.firstObject valueForKey:@"target"];
         SEL internalAction = NSSelectorFromString(@"handleNavigationTransition:");
         self.fd_fullscreenPopGestureRecognizer.delegate = self.fd_popGestureRecognizerDelegate;
         [self.fd_fullscreenPopGestureRecognizer addTarget:internalTarget action:internalAction];
-
+        
         // Disable the onboard gesture recognizer.
         self.interactivePopGestureRecognizer.enabled = NO;
     }
@@ -177,21 +177,16 @@ typedef void (^_FDViewControllerWillAppearInjectBlock)(UIViewController *viewCon
 
 - (void)fd_setupViewControllerBasedNavigationBarAppearanceIfNeeded:(UIViewController *)appearingViewController
 {
-//    if (!self.hb_viewControllerPopGestureDisable) {
-//        return;
-//    }
     if (!self.fd_viewControllerBasedNavigationBarAppearanceEnabled) {
         return;
     }
     
-//    __weak typeof(self) weakSelf = self;
+    __weak typeof(self) weakSelf = self;
     _FDViewControllerWillAppearInjectBlock block = ^(UIViewController *viewController, BOOL animated) {
-//        __strong typeof(weakSelf) strongSelf = weakSelf;
-//        //好像并没有起作用
-//        if (strongSelf) {//viewController.fd_prefersNavigationBarHidden
-//            NSLog(@"fd_prefersNavigationBarHidden = %d",viewController.fd_prefersNavigationBarHidden);
-//            [strongSelf setNavigationBarHidden:YES animated:animated];
-//        }
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if (strongSelf) {
+            [strongSelf setNavigationBarHidden:viewController.fd_prefersNavigationBarHidden animated:animated];
+        }
     };
     
     // Setup will appear inject block to appearing view controller.
@@ -207,7 +202,7 @@ typedef void (^_FDViewControllerWillAppearInjectBlock)(UIViewController *viewCon
 - (_FDFullscreenPopGestureRecognizerDelegate *)fd_popGestureRecognizerDelegate
 {
     _FDFullscreenPopGestureRecognizerDelegate *delegate = objc_getAssociatedObject(self, _cmd);
-
+    
     if (!delegate) {
         delegate = [[_FDFullscreenPopGestureRecognizerDelegate alloc] init];
         delegate.navigationController = self;
@@ -220,7 +215,7 @@ typedef void (^_FDViewControllerWillAppearInjectBlock)(UIViewController *viewCon
 - (UIPanGestureRecognizer *)fd_fullscreenPopGestureRecognizer
 {
     UIPanGestureRecognizer *panGestureRecognizer = objc_getAssociatedObject(self, _cmd);
-
+    
     if (!panGestureRecognizer) {
         panGestureRecognizer = [[UIPanGestureRecognizer alloc] init];
         panGestureRecognizer.maximumNumberOfTouches = 1;
@@ -229,41 +224,20 @@ typedef void (^_FDViewControllerWillAppearInjectBlock)(UIViewController *viewCon
     }
     return panGestureRecognizer;
 }
-/**
- *  状态栏的是否可以被改变 navigationbar 状态栏 是否显示 默认显示
- *
- *  @return <#return value description#>
- */
+
 - (BOOL)fd_viewControllerBasedNavigationBarAppearanceEnabled
 {
     NSNumber *number = objc_getAssociatedObject(self, _cmd);
     if (number) {
         return number.boolValue;
     }
-    self.fd_viewControllerBasedNavigationBarAppearanceEnabled = YES;
-    return YES;
+    self.fd_viewControllerBasedNavigationBarAppearanceEnabled = NO;
+    return NO;
 }
 
 - (void)setFd_viewControllerBasedNavigationBarAppearanceEnabled:(BOOL)enabled
 {
     SEL key = @selector(fd_viewControllerBasedNavigationBarAppearanceEnabled);
-    objc_setAssociatedObject(self, key, @(enabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-
-//手势默认
-- (BOOL)hb_viewControllerPopGestureDisable
-{
-    NSNumber *number = objc_getAssociatedObject(self, _cmd);
-    if (number) {
-        return number.boolValue;
-    }
-    return NO;
-}
-
-- (void)setHb_viewControllerPopGestureDisable:(BOOL)enabled
-{
-    SEL key = @selector(hb_viewControllerPopGestureDisable);
     objc_setAssociatedObject(self, key, @(enabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
@@ -281,15 +255,15 @@ typedef void (^_FDViewControllerWillAppearInjectBlock)(UIViewController *viewCon
     objc_setAssociatedObject(self, @selector(fd_interactivePopDisabled), @(disabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-//- (BOOL)fd_prefersNavigationBarHidden
-//{
-//    return [objc_getAssociatedObject(self, _cmd) boolValue];
-//}
-//
-//- (void)setFd_prefersNavigationBarHidden:(BOOL)hidden
-//{
-//    objc_setAssociatedObject(self, @selector(fd_prefersNavigationBarHidden), @(hidden), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-//}
+- (BOOL)fd_prefersNavigationBarHidden
+{
+    return [objc_getAssociatedObject(self, _cmd) boolValue];
+}
+
+- (void)setFd_prefersNavigationBarHidden:(BOOL)hidden
+{
+    objc_setAssociatedObject(self, @selector(fd_prefersNavigationBarHidden), @(hidden), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
 
 
 - (CGFloat)fd_interactivePopMaxAllowedInitialDistanceToLeftEdge

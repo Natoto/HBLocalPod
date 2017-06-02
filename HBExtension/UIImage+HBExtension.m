@@ -677,6 +677,32 @@ CGFloat IMGROTATE_HBDegreesToRadians(CGFloat degrees) {return degrees * M_PI / 1
     return result;
 }
 
+- (UIImage *)merge:(UIImage *)image targetframe:(CGRect)frame
+{
+    CGSize canvasSize;
+    canvasSize.width = fmaxf( self.size.width, frame.size.width );
+    canvasSize.height = fmaxf( self.size.height, frame.size.height );
+    
+    //	UIGraphicsBeginImageContext( canvasSize );
+    UIGraphicsBeginImageContextWithOptions( canvasSize, NO, self.scale );
+    
+    CGPoint offset1;
+    offset1.x = (canvasSize.width - self.size.width) / 2.0f;
+    offset1.y = (canvasSize.height - self.size.height) / 2.0f;
+    
+    //    CGPoint offset2  = frame.origin;
+    //    offset2.x = (canvasSize.width - image.size.width) / 2.0f;
+    //    offset2.y = (canvasSize.height - image.size.height) / 2.0f;
+    
+    [self drawAtPoint:offset1 blendMode:kCGBlendModeNormal alpha:1.0f];
+    [image drawInRect:frame blendMode:kCGBlendModeNormal alpha:1.0f];
+    UIImage * result = UIGraphicsGetImageFromCurrentImageContext();
+    
+    UIGraphicsEndImageContext();
+    
+    return result;
+}
+
 - (NSData *)dataWithExt:(NSString *)ext
 {
     if ( [ext compare:@"png" options:NSCaseInsensitiveSearch] )

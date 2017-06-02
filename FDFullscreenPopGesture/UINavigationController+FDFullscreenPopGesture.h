@@ -37,12 +37,8 @@
 /// A view controller is able to control navigation bar's appearance by itself,
 /// rather than a global way, checking "fd_prefersNavigationBarHidden" property.
 /// Default to YES, disable it if you don't want so.
-@property (nonatomic, assign) BOOL fd_viewControllerBasedNavigationBarAppearanceEnabled;
+@property (nonatomic, assign)  BOOL fd_viewControllerBasedNavigationBarAppearanceEnabled;
 
-/**
- *  全部禁用所有的滑动手势 默认是NO 
- */
-@property (nonatomic, assign) BOOL hb_viewControllerPopGestureDisable;
 @end
 
 /// Allows any view controller to disable interactive pop gesture, which might
@@ -57,8 +53,7 @@
 /// Indicate this view controller prefers its navigation bar hidden or not,
 /// checked when view controller based navigation bar's appearance is enabled.
 /// Default to NO, bars are more likely to show.
-//并没有起作用 屏蔽掉
-//@property (nonatomic, assign) BOOL fd_prefersNavigationBarHidden;
+@property (nonatomic, assign) BOOL fd_prefersNavigationBarHidden;
 
 /// Max allowed initial distance to left edge when you begin the interactive pop
 /// gesture. 0 by default, which means it will ignore this limit.

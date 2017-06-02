@@ -17,6 +17,11 @@
 static NSString * key_cellstruct_sectionbguicolor = @"key_cellstruct_sectionuicolor";
 
 @interface BaseTableViewController : HBBaseTableViewController<PENGCellProtocol,BaseViewControllerProtocol>
+/**
+ * 已经加载过viewDidLoad了
+ */
+@property (nonatomic, assign) BOOL firshload;
+
 //@property(nonatomic,retain) HBNavigationbar * navigationbar;
 //@property(nonatomic,retain) HBNavigationbar * navigationtoolsbar;
 

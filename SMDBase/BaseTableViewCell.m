@@ -11,8 +11,7 @@
 #import "NSAttributedString+AttributedStringWithHTML.h"
 #import "UIView+Transition.h"
 //#import "UIView+YYAdd.h"
-
-
+ 
 
 @interface BaseTableViewCell()
 @property (nonatomic, strong) UIImageView * snapImageView;
@@ -38,6 +37,7 @@
         view_bg.backgroundColor = KT_HEXCOLORA(0xd9d9d9,1);//KT_HEXCOLOR(0xd84637);//[UIColor grayColor];
         self.selectedBackgroundView = view_bg;
         self.clipsToBounds = YES;
+      
     }
     return self;
 }
@@ -55,45 +55,11 @@
 -(void)layoutSubviews{
     [super layoutSubviews];
     
-    
     CGFloat lineheight = 0.3;
     UIColor * linecolor =  KT_HEXCOLORA(0xd9d9d9, 1);
-    if (self.showTopLine) {
-        [self drawToplinelayer];
-        NSString * toplayerinset = self.dictionary[key_cellstruct_toplayerinsets];
-        if (toplayerinset) {
-            UIEdgeInsets  insets  = UIEdgeInsetsFromString(toplayerinset);
-            CGRect  layerframe = CGRectMake(insets.left, insets.top, [UIScreen mainScreen].bounds.size.width - insets.left - insets.right, lineheight);
-            self.toplayer.backgroundColor = linecolor;
-            self.toplayer.frame = layerframe;
-        }
-        else{
-            CGRect  layerframe = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, lineheight);
-            self.toplayer.frame = layerframe;
-        }
-    }
-    else
-    {
-        [self clearTopLayer];
-    }
-    if (self.showBottomLine) {
-        [self drawBottomlinelayer];
-        self.bottomlayer.backgroundColor = linecolor;
-        NSString * toplayerinset = self.dictionary[key_cellstruct_toplayerinsets];
-        if (toplayerinset) {
-            UIEdgeInsets  insets  = UIEdgeInsetsFromString(toplayerinset);
-            CGRect  layerframe = CGRectMake(insets.left,  self.frame.size.height - insets.bottom, [UIScreen mainScreen].bounds.size.width - insets.left - insets.right, lineheight);
-            self.bottomlayer.frame = layerframe;
-        }
-        else{
-            CGRect  layerframe = CGRectMake(0, self.frame.size.height - lineheight, [UIScreen mainScreen].bounds.size.width, lineheight);
-            self.bottomlayer.frame = layerframe;
-        }
-    }else
-    {
-        [self clearBottomLayer];
-    }
-
+    self.toplayer.backgroundColor = linecolor;
+    self.bottomlayer.backgroundColor = linecolor;
+    
 }
 
 -(void)setcellRightValue:(NSString *)value

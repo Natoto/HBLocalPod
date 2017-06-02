@@ -30,13 +30,38 @@ static char OperationKey;
 {
     [[[UIAlertView alloc] initWithTitle:@"提示" message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
 }
+  
+-(void)presentAlertTitle:(NSString *)title
+                 message:(NSString *)message
+                    from:(UIViewController *)from
+                   block:(void(^)())block {
+    
+    
+    UIAlertController *alert=[UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *actionOk=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+        if(block) block();
+    }];
+    [alert addAction:actionOk];
+    //添加一个文本框到弹框控制器
+    //显示弹框控制器
+    [from presentViewController:alert animated:YES completion:nil];
+    
+}
 
--(void)presentAlertTitle:(NSString *)title message:(NSString *)message from:(UIViewController *)from block:(void(^)())block{
-     
+
+
+-(void)presentSheetTitle:(NSString *)title
+                 message:(NSString *)message
+                    from:(UIViewController *)from
+                   block:(void(^)())block
+                  cancel:(void(^)())cancle{
+    
     
     UIAlertController *alert=[UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleActionSheet];
     //创建一个取消和一个确定按钮
-    UIAlertAction *actionCancle=[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
+    UIAlertAction *actionCancle=[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        if(cancle) cancle();
+    }];
     //因为需要点击确定按钮后改变文字的值，所以需要在确定按钮这个block里面进行相应的操作
     UIAlertAction *actionOk=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
         if(block) block();
@@ -45,11 +70,11 @@ static char OperationKey;
     [alert addAction:actionCancle];
     [alert addAction:actionOk];
     //添加一个文本框到弹框控制器
-    
     //显示弹框控制器
     [from presentViewController:alert animated:YES completion:nil];
-
+    
 }
+
 -(void)presentAlertTitle:(NSString *)title message:(NSString *)message
 {
     [[[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
@@ -134,16 +159,17 @@ static char OperationKey;
 //    });
 //}
 
--(void)presentLoadinghud
+-(MBProgressHUD *)presentLoadinghud
 {
     UIView * superview = [self SuperView];
-    if(!superview) return ;
+    if(!superview) return nil;
     MBProgressHUD * HUD = [MBProgressHUD showHUDAddedTo:superview animated:YES];
     UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
     [button setImage:[UIImage imageNamed:@"closeBtn"] forState:UIControlStateNormal];
     button.frame = CGRectMake(5, [UIScreen mainScreen].bounds.size.height - 30, 25, 25);
     [button addTarget:self action:@selector(hideloadingTips:) forControlEvents:UIControlEventTouchUpInside];
     [HUD addSubview:button];
+    return HUD;
 }
 
 -(void)dismissAllTips

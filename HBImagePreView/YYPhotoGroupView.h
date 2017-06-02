@@ -7,6 +7,7 @@
 
 #import <UIKit/UIKit.h>
 
+static  NSString * notify_yyphotogroupview_longpress = @"notify_yyphotogroupview_longpress";
 
 /// Single picture's info.
 @interface YYPhotoGroupItem : NSObject
@@ -22,7 +23,9 @@
 @property (nonatomic, readonly) NSArray *groupItems; ///< Array<YYPhotoGroupItem>
 @property (nonatomic, readonly) NSInteger currentPage;
 @property (nonatomic, assign) BOOL blurEffectBackground; ///< Default is YES
-
+@property (nonatomic, assign) BOOL pinShowlayerMask; ///< Default is YES
+@property (nonatomic, assign) BOOL   canshareImage;
+@property (nonatomic, assign) BOOL   isshow;
 
 - (instancetype)init UNAVAILABLE_ATTRIBUTE;
 - (instancetype)initWithFrame:(CGRect)frame UNAVAILABLE_ATTRIBUTE;
@@ -37,4 +40,5 @@
 
 - (void)dismissAnimated:(BOOL)animated completion:(void (^)(void))completion;
 - (void)dismiss;
+
 @end

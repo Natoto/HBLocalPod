@@ -41,6 +41,7 @@
 
 + (UIImage *)merge:(NSArray *)images;
 - (UIImage *)merge:(UIImage *)image;
+- (UIImage *)merge:(UIImage *)image targetframe:(CGRect)frame;
 - (UIImage *)resize:(CGSize)newSize;
 - (UIImage *)scaleToSize:(CGSize)size;
 

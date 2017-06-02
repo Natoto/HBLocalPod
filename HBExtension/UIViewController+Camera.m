@@ -30,10 +30,11 @@ const char * editModeKey = "editModeKey";
 -(void)cancelUIViewControllerCameraDelegate {
     //取消该关联变量，置空
     objc_setAssociatedObject(self, &OperationKey, nil, OBJC_ASSOCIATION_ASSIGN);
-    
 //    //取消全部关联变量
 //    objc_removeAssociatedObjects(arr);
 }
+
+
 -(id)getUIViewControllerCameraDelegate
 {
     return objc_getAssociatedObject(self, &OperationKey);

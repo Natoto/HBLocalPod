@@ -37,5 +37,6 @@
 -(void)startHeaderLoading;
 -(void)noticeNoMoreData;
 
+-(NSInteger)countDataDictionaryForSection:(NSInteger)section;
 -(void)removeDataDictionaryForSection:(NSInteger)section;
 @end

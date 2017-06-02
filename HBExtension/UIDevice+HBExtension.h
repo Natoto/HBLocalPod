@@ -28,14 +28,14 @@
 #define IS_IPHONE_6         (IS_IPHONE && SCREEN_MAX_LENGTH == 667.0)
 #define IS_IPHONE_6P        (IS_IPHONE && SCREEN_MAX_LENGTH == 736.0)
 
-#define IOS10_OR_LATER		( [[[UIDevice currentDevice] systemVersion] compare:@"10.0"] != NSOrderedAscending )
-#define IOS9_OR_LATER		( [[[UIDevice currentDevice] systemVersion] compare:@"9.0"] != NSOrderedAscending )
-#define IOS8_OR_LATER		( [[[UIDevice currentDevice] systemVersion] compare:@"8.0"] != NSOrderedAscending )
-#define IOS7_OR_LATER		( [[[UIDevice currentDevice] systemVersion] compare:@"7.0"] != NSOrderedAscending )
-#define IOS6_OR_LATER		( [[[UIDevice currentDevice] systemVersion] compare:@"6.0"] != NSOrderedAscending )
-#define IOS5_OR_LATER		( [[[UIDevice currentDevice] systemVersion] compare:@"5.0"] != NSOrderedAscending )
-#define IOS4_OR_LATER		( [[[UIDevice currentDevice] systemVersion] compare:@"4.0"] != NSOrderedAscending )
-#define IOS3_OR_LATER		( [[[UIDevice currentDevice] systemVersion] compare:@"3.0"] != NSOrderedAscending )
+#define IOS10_OR_LATER		( [[[UIDevice currentDevice] systemVersion] floatValue]>= 10.0 )
+#define IOS9_OR_LATER		( [[[UIDevice currentDevice] systemVersion] floatValue]>= 9.0 )
+#define IOS8_OR_LATER		(  [[[UIDevice currentDevice] systemVersion] floatValue]>= 8.0 )
+#define IOS7_OR_LATER		(  [[[UIDevice currentDevice] systemVersion] floatValue]>=7.0 )
+#define IOS6_OR_LATER		(  [[[UIDevice currentDevice] systemVersion] floatValue]>= 6.0 )
+#define IOS5_OR_LATER		( [[[UIDevice currentDevice] systemVersion] floatValue]>= 5.0 )
+#define IOS4_OR_LATER		(  [[[UIDevice currentDevice] systemVersion] floatValue]> 4.0 )
+#define IOS3_OR_LATER		( [[[UIDevice currentDevice] systemVersion] floatValue]>= 3.0 )
 
 
 #define IOS9_OR_EARLIER		( !IOS10_OR_LATER )

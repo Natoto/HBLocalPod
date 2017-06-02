@@ -11,6 +11,8 @@
 //#import "NSString+HBExtension.h"
 #if __has_include("YYCache.h")
 #import "YYCache.h"
+#else if __has_include(<YYCache/YYCache.h>)
+#import <YYCache/YYCache.h>
 #endif
 
 #define USE_YYCACHE  1
@@ -115,27 +117,33 @@ static NSString * hjb_appvision() {
 -(void)setNSUserDefaultObject:(id)object forKey:(NSString *)key
 {
     key = [CacheCenter fullKey:key fixkey:nil];
-    if (object)
-    {
-        [[NSUserDefaults standardUserDefaults]  setObject:object forKey:key];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-    }
-    if (object && ![self.signalNames containsObject:key])
-    {
-        [self.signalNames addObject:key];
-        [[NSUserDefaults standardUserDefaults] setObject:self.signalNames forKey:@"signalNames"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-    }
-    if (!object)
-    {//为空就移除
-        [[NSUserDefaults standardUserDefaults]  removeObjectForKey:key];
-        [[NSUserDefaults standardUserDefaults]  synchronize];
-         if ([self.signalNames containsObject:key])
-         {
-             [self.signalNames removeObject:key];
-             [[NSUserDefaults standardUserDefaults] setObject:self.signalNames forKey:@"signalNames"];
-             [[NSUserDefaults standardUserDefaults] synchronize];
-         }
+    @try {
+        if (object)
+        {
+            [[NSUserDefaults standardUserDefaults]  setObject:object forKey:key];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        }
+        if (object && ![self.signalNames containsObject:key])
+        {
+            [self.signalNames addObject:key];
+            [[NSUserDefaults standardUserDefaults] setObject:self.signalNames forKey:@"signalNames"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        }
+        if (!object)
+        {//为空就移除
+            [[NSUserDefaults standardUserDefaults]  removeObjectForKey:key];
+            [[NSUserDefaults standardUserDefaults]  synchronize];
+            if ([self.signalNames containsObject:key])
+            {
+                [self.signalNames removeObject:key];
+                [[NSUserDefaults standardUserDefaults] setObject:self.signalNames forKey:@"signalNames"];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+            }
+        }
+    } @catch (NSException *exception) {
+        
+    } @finally {
+        
     }
 }
 

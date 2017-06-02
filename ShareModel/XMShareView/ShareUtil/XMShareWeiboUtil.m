@@ -49,7 +49,7 @@
         webpage.title = self.shareTitle;
         webpage.description = self.shareText;
         //  可改为自定义图片
-        webpage.thumbnailData = UIImageJPEGRepresentation(SHARE_IMG, SHARE_IMG_COMPRESSION_QUALITY);
+        webpage.thumbnailData = UIImageJPEGRepresentation(self.thumeImage, SHARE_IMG_COMPRESSION_QUALITY);
         webpage.webpageUrl = self.shareUrl;
         
         message.mediaObject = webpage;

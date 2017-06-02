@@ -104,8 +104,8 @@
  *  从PLIST 文件中加载配置信息
  *
  *  @param plistname plist文件的名字
- */
--(void)loadplistConfig:(NSString *)plistname
+ */-(void)loadplistConfig:(NSString *)plistname
+
 {
     
 #if DEBUG && TARGET_IPHONE_SIMULATOR 
@@ -137,13 +137,11 @@
 -(void)startHeaderLoading
 {
     [self.tableView.mj_header beginRefreshing];
-}
-
- 
+} 
 
 -(void)viewDidLoad
 {
-    [super viewDidLoad];
+    [super viewDidLoad]; 
 //    if ([self respondsToSelector:@selector(setEdgesForExtendedLayout:)]) {//这个是需要的
 //        self.edgesForExtendedLayout = UIRectEdgeAll;//UIRectEdgeNone;
 //    }

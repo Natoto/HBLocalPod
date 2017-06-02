@@ -48,6 +48,8 @@ typedef NS_ENUM(NSInteger, SHARE_ITEM){
 //  分享链接
 @property (nonatomic, strong) NSString *shareUrl;
 
+@property (nonatomic, strong) UIImage * thumeImage;
+
 @property (nonatomic, strong) UIView *shareActionView;
 @end
 

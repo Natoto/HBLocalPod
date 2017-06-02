@@ -159,9 +159,14 @@
     return vc;
 }
 
-//huangbo add
 - (void)openURLString:(NSString *)URLString parameters:(NSDictionary *)parameters
 {
+    [self openURLString:URLString parameters:parameters animation:YES];
+}
+//huangbo add
+- (void)openURLString:(NSString *)URLString parameters:(NSDictionary *)parameters animation:(BOOL)animate
+{
+
     // 处理模态dismiss
     BOOL isChanged = [self __handleDismissWithURLString:URLString];
     if (isChanged) return;
@@ -214,7 +219,7 @@
         // 最后在push最后的vc
         UIViewController *vc     = [self viewControllerForKey:[components lastObject]];
         //    NSDictionary *parameters = [self __dictionaryFromQuery:url.query];
-        [self __pushViewController:vc parameters:parameters atNavigationController:nvc animated:YES];
+        [self __pushViewController:vc parameters:parameters atNavigationController:nvc animated:animate];
     }
 }
 

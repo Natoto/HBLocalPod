@@ -20,7 +20,6 @@
     return self;\
 }
 
-@interface HBActiveObject : ArchiveObject
-
+@interface HBActiveObject : ArchiveObject 
 - (BOOL)validate  __attribute__((objc_requires_super));
 @end

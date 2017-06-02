@@ -311,6 +311,10 @@ static const char * __isjb_app = NULL;
     if ([deviceString isEqualToString:@"iPhone7,2"])    return @"iPhone 6";
     if ([deviceString isEqualToString:@"iPhone8,1"])    return @"iPhone 6s";
     if ([deviceString isEqualToString:@"iPhone8,2"])    return @"iPhone 6s Plus";
+    if ([deviceString isEqualToString:@"iPhone9,1"])    return @"iPhone 7";
+    if ([deviceString isEqualToString:@"iPhone9,2"])    return @"iPhone 7 Plus";
+    if ([deviceString isEqualToString:@"iPhone9,3"])    return @"iPhone 7";
+    if ([deviceString isEqualToString:@"iPhone9,4"])    return @"iPhone 7 Plus";
     
     //iPod
     if ([deviceString isEqualToString:@"iPod1,1"])      return @"iPod Touch 1G";
@@ -318,6 +322,9 @@ static const char * __isjb_app = NULL;
     if ([deviceString isEqualToString:@"iPod3,1"])      return @"iPod Touch 3G";
     if ([deviceString isEqualToString:@"iPod4,1"])      return @"iPod Touch 4G";
     if ([deviceString isEqualToString:@"iPod5,1"])      return @"iPod Touch 5G";
+    if ([deviceString isEqualToString:@"iPod7,1"])      return @"iPod touch (6th gen)";
+    
+    
     
     //iPad
     if ([deviceString isEqualToString:@"iPad1,1"])      return @"iPad";
@@ -341,6 +348,12 @@ static const char * __isjb_app = NULL;
     if ([deviceString isEqualToString:@"iPad4,3"])      return @"iPad Air";
     if ([deviceString isEqualToString:@"iPad5,3"])      return @"iPad Air 2";
     if ([deviceString isEqualToString:@"iPad5,4"])      return @"iPad Air 2";
+    
+    if ([deviceString isEqualToString:@"iPad6,3"])      return @"iPad Pro";
+    if ([deviceString isEqualToString:@"iPad6,4"])      return @"iPad Pro";
+    if ([deviceString isEqualToString:@"iPad6,7"])      return @"iPad Pro";
+    if ([deviceString isEqualToString:@"iPad6,8"])      return @"iPad Pro";
+    
     if ([deviceString isEqualToString:@"i386"])         return @"Simulator";
     if ([deviceString isEqualToString:@"x86_64"])       return @"Simulator";
     

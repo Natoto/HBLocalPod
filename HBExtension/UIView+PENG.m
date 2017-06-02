@@ -328,8 +328,7 @@ static char  key_rightlayer_p;
     layer.startPoint = _inputPoint0;
     layer.endPoint = _inputPoint1;
     layer.frame = self.bounds;
-    self.backgroundColor = [UIColor colorWithWhite:1 alpha:0];
-//    [self.layer addSublayer:layer];
+    self.backgroundColor = [UIColor clearColor];//[UIColor colorWithWhite:1 alpha:.1];
     [self.layer insertSublayer:layer atIndex:0];
 }
 @end

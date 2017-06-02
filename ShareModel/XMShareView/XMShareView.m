@@ -205,6 +205,7 @@ static const NSInteger numbersOfItemInLine = 3;
     util.shareTitle = self.shareTitle;
     util.shareText = self.shareText;
     util.shareUrl = self.shareUrl;
+    util.thumeImage = self.thumeImage;
     
     [util shareToWeixinSession];
     
@@ -217,7 +218,7 @@ static const NSInteger numbersOfItemInLine = 3;
     util.shareTitle = self.shareTitle;
     util.shareText = self.shareText;
     util.shareUrl = self.shareUrl;
-    
+    util.thumeImage = self.thumeImage;
     [util shareToWeixinTimeline];
     
 }
@@ -228,6 +229,7 @@ static const NSInteger numbersOfItemInLine = 3;
     util.shareTitle = self.shareTitle;
     util.shareText = self.shareText;
     util.shareUrl = self.shareUrl;
+    util.thumeImage = self.thumeImage;
     
     [util shareToQQ];
 }
@@ -238,6 +240,7 @@ static const NSInteger numbersOfItemInLine = 3;
     util.shareTitle = self.shareTitle;
     util.shareText = self.shareText;
     util.shareUrl = self.shareUrl;
+    util.thumeImage = self.thumeImage;
     
     [util shareToQzone];
 }
@@ -249,6 +252,7 @@ static const NSInteger numbersOfItemInLine = 3;
     util.shareTitle = self.shareTitle;
     util.shareText = self.shareText;
     util.shareUrl = self.shareUrl;
+    util.thumeImage = self.thumeImage;
     
     [util shareToWeibo];
     

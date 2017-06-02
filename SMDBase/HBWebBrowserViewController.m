@@ -118,7 +118,9 @@ static void *KINWebBrowserContext = &KINWebBrowserContext;
     [self.progressView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin];
 
     [self btn_close];
-    [self.navigationbar setrightBarButtonItemWithTitle:@"更多" target:self selector:@selector(morebtntap:)];
+    if (self.showMoreItem) {
+        [self.navigationbar setrightBarButtonItemWithTitle:@"更多" target:self selector:@selector(morebtntap:)];
+    }
 }
 
 -(IBAction)morebtntap:(id)sender
@@ -185,7 +187,35 @@ static void *KINWebBrowserContext = &KINWebBrowserContext;
         [self.wkWebView loadRequest:[NSURLRequest requestWithURL:URL]];
     }
     else if(self.uiWebView) {
-        [self.uiWebView loadRequest:[NSURLRequest requestWithURL:URL]];
+        //解决TXT中文乱码问题
+        
+        NSString * filePath = URL.relativePath;
+        
+        if ([filePath.lastPathComponent containsString:@".txt"]) {
+            
+//            self.uiWebView.scalesPageToFit = YES;//自动对页面进行缩放以适应屏幕
+            NSString *body =[NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
+            //如果不是 则进行GBK编码再解码一次
+            if (!body) {
+                body =[NSString stringWithContentsOfFile:filePath encoding:0x80000632 error:nil];
+            }
+            //不行用GB18030编码再解码一次
+            if (!body) {
+                body =[NSString stringWithContentsOfFile:filePath encoding:0x80000631 error:nil];
+            }
+            if (body) {
+                body =[body stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+                //替换换行符为HTML换行符
+                [self.uiWebView loadHTMLString:body baseURL:nil];
+            }
+            else{
+                [self.uiWebView loadRequest:[NSURLRequest requestWithURL:URL]];
+            }
+        }
+        else{
+            [self.uiWebView loadRequest:[NSURLRequest requestWithURL:URL]];
+        }
+        
     }
 }
 

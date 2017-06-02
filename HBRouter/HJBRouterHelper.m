@@ -9,16 +9,7 @@
 #import "HJBRouterHelper.h"
 #import "HBRouter.h"
 
-@class RootViewController;
-//@class HomeViewController;
-//@class CashierDeskViewController;
-//@class MyAccountViewController;
-//@class YYCommissionViewController;
-//@class SettingViewController;
-//@class PhoneRechargeTableController;
-//@class HBChargeViewController;
-//@class YBChargeViewController;
-//@class LoginViewController;
+@class RootViewController; 
 
 @implementation HJBRouterHelper
 //没什么卵用
@@ -29,11 +20,6 @@
                      @"routes" :@{
                              @"index"  : @"RootViewController",//ROOT
                              @"RootViewController": @"RootViewController",
-//                             @"YBChargeViewController" : @"YBChargeViewController",
-//                             @"HBChargeViewController" : @"HBChargeViewController",
-//                             @"PhoneRechargeTableController":@"PhoneRechargeTableController",
-//                             @"CashierDeskViewController" : @"CashierDeskViewController",
-//                             @"LoginViewController"   : @"LoginViewController",
                              },
                      @"main" : @"index"
                      },
@@ -81,7 +67,21 @@
  *  @param key        <#key description#>
  *  @param parameters <#parameters description#>
  */
+-(void)openURLString:(NSString *)URLString forkey:(NSString *)key parameters:(NSDictionary *)parameters animate:(BOOL)animate
+{
+    if (key) {
+        [[HBRouter sharedInstance] mapKey:key toControllerClassName:key];
+    }
+    [[HBRouter sharedInstance] openURLString:URLString parameters:parameters animation:animate];
+    
+}
 -(void)openURLString:(NSString *)URLString forkey:(NSString *)key parameters:(NSDictionary *)parameters
+{
+    [self openURLString:URLString forkey:key parameters:parameters animate:YES];
+    
+}
+
++(void)openURLString:(NSString *)URLString forkey:(NSString *)key parameters:(NSDictionary *)parameters
 {
     if (key) {
         [[HBRouter sharedInstance] mapKey:key toControllerClassName:key];
@@ -90,6 +90,12 @@
     
 }
 
++(void)openForkey:(NSString *)key  blockViewController:(UIViewController *(^)(void))block {
+    
+    [[HBRouter sharedInstance] mapKey:key toBlock:block];
+    [[HBRouter sharedInstance] openURLString:key];
+    
+}
 -(void)openForkey:(NSString *)key  blockViewController:(UIViewController *(^)(void))block {
     
     [[HBRouter sharedInstance] mapKey:key toBlock:block];

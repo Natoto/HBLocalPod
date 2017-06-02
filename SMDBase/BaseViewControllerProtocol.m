@@ -37,7 +37,7 @@
      [UIColor colorWithRed:242./255 green:242./255 blue:242./255. alpha:1];
     //KT_UIColorWithRGBA(249., 249, 249., 1);
     // [UIColor colorWithRed:237./255. green:241./255. blue:249./255 alpha:1];
-    [self.navigationController.navigationBar setHidden:YES];
+    [self.navigationController setNavigationBarHidden:YES];
     ADD_HBSIGNAL_OBSERVER(self, notify_NetworkError,  notify_sender_Network)
     if (self.navigationController.viewControllers.count>=2 && self.navigationController.topViewController == self) {
         [self.navigationbar setleftBarButtonItemWithImage:[UIImage imageNamed:@"fanta_ic_back"] target:self selector:@selector(backtoparent:)];
@@ -163,19 +163,21 @@ static char const key_navigationbar = 't';
 -(void)FinishedLoadData{}
 -(void)refreshView{}
 
+@end
 
+@implementation UIViewController(hbshownewmsg)
 
 // 显示更新新闻条数
 - (void)showUpdateNewsCountMessageView:(NSString *)message
 {
     CGFloat labelH = 25;
-    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0, self.navigationbar.height, CGRectGetWidth(self.view.frame), -labelH)];
+    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0, 20+64, CGRectGetWidth(self.view.frame), -labelH)];
     label.textAlignment = NSTextAlignmentCenter;
     label.text = message;
     label.font = [UIFont systemFontOfSize:12];
     label.textColor = [UIColor whiteColor];
     label.backgroundColor = KT_UIColorWithRGBA(238, 95, 112, 0.8);
-    [self.view insertSubview:label belowSubview:self.navigationbar];
+    [self.view insertSubview:label belowSubview:self.navigationController.navigationBar];
     
     // 移动动画
     [UIView animateWithDuration:0.5 animations:^{
@@ -189,4 +191,39 @@ static char const key_navigationbar = 't';
     }];
 }
 
+- (UILabel *)showStatusbarMessageView:(NSString *)message
+{
+    CGFloat labelH = 20;
+    
+    NSInteger msgtag = 0x8888;
+    if ([self.view viewWithTag:msgtag]) {
+        return [self.view viewWithTag:msgtag];
+    }
+    
+    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), -labelH)];
+    label.textAlignment = NSTextAlignmentCenter;
+    label.text = message;
+    label.font = [UIFont systemFontOfSize:12];
+    label.textColor = [UIColor whiteColor];
+    label.backgroundColor = KT_UIColorWithRGBA(238, 95, 112, 0.8);
+    label.tag = msgtag;
+//    [self.view insertSubview:label belowSubview:self.navigationbar];
+    [self.view addSubview:label];
+    // 移动动画
+    BOOL ishidden =   [[UIApplication sharedApplication] isStatusBarHidden];
+   
+    [[UIApplication sharedApplication] setStatusBarHidden:YES];
+    [UIView animateWithDuration:0.5 animations:^{
+        label.transform = CGAffineTransformMakeTranslation(0, labelH);
+    } completion:^(BOOL finished) {
+        [UIView animateWithDuration:0.5 delay:1.0 options:UIViewAnimationOptionTransitionFlipFromTop animations:^{
+            label.transform = CGAffineTransformIdentity; 
+        } completion:^(BOOL finished) {
+            [label removeFromSuperview];
+            [[UIApplication sharedApplication] setStatusBarHidden:ishidden];
+        }];
+    }];
+    
+    return label;
+}
 @end

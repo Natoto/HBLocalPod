@@ -36,6 +36,8 @@ typedef UIViewController *  (^HBRouterBlock)();
 
 - (void)openURLString:(NSString *)URLString;
 - (void)openURLString:(NSString *)URLString parameters:(NSDictionary *)parameters;
+- (void)openURLString:(NSString *)URLString parameters:(NSDictionary *)parameters animation:(BOOL)animate;
+
 #pragma mark - override
 /// 默认有个返回实际显示navigationController的方法. 你也可以在重写这个方法,以返回你期望的 navigationController
 + (UINavigationController *)expectedVisibleNavigationController;

@@ -24,6 +24,9 @@
 
 - (CGFloat)getTextHeightWithWidth:(CGFloat)width font:(UIFont *)fontsize;
 {
+    if (!fontsize) {
+        fontsize = [UIFont systemFontOfSize:15];
+    }
     //获取当前系统版本
     CGFloat currentVersion = [[UIDevice currentDevice].systemVersion floatValue];
     CGFloat height;
@@ -59,13 +62,7 @@
 
 @interface SMDAlertView()
 
-@property (strong, nonatomic)  UILabel  * lbl_title;
-@property (strong, nonatomic)  UILabel  * lbl_message;
-@property (strong, nonatomic)  UILabel  * lbl_detail;
-@property (strong, nonatomic)  UIButton * btn_confirm;
-@property (strong, nonatomic)  UIView   * alertView;
 @property (strong, nonatomic)  UIView   * bgView;
-@property (strong, nonatomic)  UIButton * btn_cancel;
 
 
 @property (nonatomic, strong) NSString * title;
@@ -270,25 +267,13 @@
     [alertview.alertView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.equalTo(@(height));
     }];
-//    [alertview.lbl_detail  mas_updateConstraints:^(MASConstraintMaker *make) {
-//        make.height.mas_equalTo(detailsize.height);
-//    }];
     if (cancelButtonTitle) {
         [alertview.btn_cancel setTitle:cancelButtonTitle forState:UIControlStateNormal];
-//        [self.cancelbtn_width_Constraint uninstall];
-//        [alertview.btn_cancel mas_updateConstraints:^(MASConstraintMaker *make) {
-//            make.width.equalTo(alertview).multipliedBy(0.5);
-//        }];
-        
-//        [alertview.btn_cancel layoutIfNeeded];
-//        [alertview layoutIfNeeded];
     }else {
         [alertview.btn_cancel mas_updateConstraints:^(MASConstraintMaker *make) {
             make.width.equalTo(alertview).multipliedBy(0);
         }];
-    }
-//
-    
+    } 
 }
 -(void)loadTitle:(NSString *)title
          message:(NSString *)message
@@ -299,11 +284,21 @@ cancelButtonTitle:(NSString *)cancelButtonTitle
 //    alertview.alertView.frame = CGRectMake(0, 0, 274, height);
 //    alertview.alertView.center = alertview.center;
 }
--(IBAction)buttonTap:(id)sender
-{
+
+-(void)dismiss{
+    [self buttonTap:nil];
+}
+
+-(void)dismiss:(BOOL)animation sender:(id)sender{
+    
+    self.isshow = NO;
     if (sender == self.btn_confirm) {
         if (self.SMDDismissBlock) {
             self.SMDDismissBlock(0);
+        }
+        if (!animation) {
+            [self removeFromSuperview];
+            return;
         }
         [UIView animateWithDuration:0.3 animations:^{
             self.alpha = 0;
@@ -317,6 +312,10 @@ cancelButtonTitle:(NSString *)cancelButtonTitle
         if (self.SMDCancelBlock) {
             self.SMDCancelBlock();
         }
+        if (!animation) {
+            [self removeFromSuperview];
+            return;
+        }
         [UIView animateWithDuration:0.3 animations:^{
             self.alpha = 0;
             self.alertView.transform = CGAffineTransformMakeScale(0.0001, 0.0001);
@@ -326,6 +325,10 @@ cancelButtonTitle:(NSString *)cancelButtonTitle
         }];
         
     }
+}
+-(IBAction)buttonTap:(id)sender
+{
+    [self dismiss:YES sender:sender];
 }
 + (instancetype ) alertViewWithTitle:(NSString*) title
                              message:(NSString*) message
@@ -346,14 +349,26 @@ cancelButtonTitle:(NSString *)cancelButtonTitle
 }
 
 -(void)show{
+    
+    [self show:YES];
+}
+
+-(void)show:(BOOL)animate{
+    
+    self.isshow = YES;
     UIWindow * window = [[[UIApplication sharedApplication] windows] firstObject];
     
     [window addSubview:self];
     
     [self layoutIfNeeded];
-    [UIView animateWithDuration:0.3 animations:^{
+    if (animate) {
+        [UIView animateWithDuration:0.3 animations:^{
+            self.alertView.transform = CGAffineTransformMakeScale(1.0, 1.0);
+        }];
+    }else{ 
         self.alertView.transform = CGAffineTransformMakeScale(1.0, 1.0);
-    }];
+    }
+
     
 }
 
