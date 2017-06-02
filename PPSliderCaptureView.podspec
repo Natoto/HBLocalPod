@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
 s.name         = "PPSliderCaptureView"
-s.version      = "0.0.3"
+s.version      = "0.0.4"
 s.summary      = "PPSliderCaptureView desc" 
 s.homepage     = "https://github.com/natoto/HBLocalPod"  
 s.author       = { "nonato" => "787038442@qq.com" } 
