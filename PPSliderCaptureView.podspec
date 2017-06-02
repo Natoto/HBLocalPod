@@ -5,7 +5,7 @@ s.summary      = "PPSliderCaptureView desc"
 s.homepage     = "https://github.com/natoto/HBLocalPod"  
 s.author       = { "nonato" => "787038442@qq.com" } 
 s.platform     = :ios,'7.0'
-s.source       = { :podspec => "https://raw.githubusercontent.com/Natoto/HBLocalPod/master/PPSliderCaptureView.podspec" }
+s.source       = { :git => "https://github.com/natoto/HBLocalPod" }
 s.source_files = "PPSliderCaptureView/**/*.{h,m}" 
 s.frameworks = 'Foundation' 
 s.requires_arc = true    
