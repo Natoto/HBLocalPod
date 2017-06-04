@@ -45,7 +45,7 @@ ZMCreditSDK | 芝麻信用sdk|
 | AlipaySDK 	| 阿里云sdk|
 
 
-###用法如下
+###  用法如下
 ```
 pod  'PPSliderCaptureView',:git =>'https://github.com/Natoto/HBLocalPod/'
 

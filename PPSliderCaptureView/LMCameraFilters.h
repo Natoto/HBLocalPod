@@ -10,13 +10,20 @@
 
 @interface LMCameraFilters : NSObject
 
-//时光、白露、少女、布拉格、黑白
+//时光、白露、少女、布拉格、黑白 
 +(GPUImageFilterGroup *)heibai;
 +(GPUImageFilterGroup *)bulage;
 +(GPUImageFilterGroup *)shaolv;
 +(GPUImageFilterGroup *)bailu;
 +(GPUImageFilterGroup *)shiguang;
-
+/**
+ * 夜色
+ */
++(GPUImageFilterGroup *)yese;
+/**
+ * 美食
+ */
++(GPUImageFilterGroup *)meishi;
 //    正常
 + (GPUImageFilterGroup *)normal;
 

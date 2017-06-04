@@ -117,14 +117,21 @@
 }
 
 -(NSArray<GPUImageFilterGroup *> *)ftgroups{
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(ftgroupsOfslideCaptureView:)]) {
+        if (!_ftgroups) {
+            _ftgroups = [self.delegate ftgroupsOfslideCaptureView:self];
+        }
+        return _ftgroups;
+    }
+    
     if (!_ftgroups) {
-        GPUImageFilterGroup *f1 = [LMCameraFilters shiguang];
-        GPUImageFilterGroup *f2 = [LMCameraFilters bailu];
-        GPUImageFilterGroup *f3 = [LMCameraFilters shaolv];
-        GPUImageFilterGroup *f4 = [LMCameraFilters bulage];
-        GPUImageFilterGroup *f5 = [LMCameraFilters heibai];
         GPUImageFilterGroup *f6 = [LMCameraFilters normal];
-        _ftgroups = @[f1,f2,f3,f4,f5,f6];
+        GPUImageFilterGroup *f1 = [LMCameraFilters shiguang]; //ok
+        GPUImageFilterGroup *f2 = [LMCameraFilters shaolv];
+        GPUImageFilterGroup *f3 = [LMCameraFilters yese];
+        GPUImageFilterGroup *f4 = [LMCameraFilters heibai]; //ok
+        _ftgroups = @[f6,f1,f2,f3,f4]; 
     }
     return _ftgroups;
 }

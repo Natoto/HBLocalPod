@@ -66,6 +66,30 @@
     group.color = [UIColor blackColor];
     return group;
 }
+
++(GPUImageFilterGroup *)yese{
+
+    IFRiseFilter*filter  =  [[IFRiseFilter alloc] init];
+    GPUImageFilterGroup *group = [[GPUImageFilterGroup alloc] init];
+    [(GPUImageFilterGroup *) group setInitialFilters:[NSArray arrayWithObject: filter]];
+    [(GPUImageFilterGroup *) group setTerminalFilter:filter];
+    group.title = @"夜色";
+    group.color = [UIColor blackColor];
+    return group;
+    
+}
+
++(GPUImageFilterGroup *)meishi{
+
+    IFHefeFilter * filter  =  [[IFHefeFilter alloc] init];
+    GPUImageFilterGroup *group = [[GPUImageFilterGroup alloc] init];
+    [(GPUImageFilterGroup *) group setInitialFilters:[NSArray arrayWithObject: filter]];
+    [(GPUImageFilterGroup *) group setTerminalFilter:filter];
+    group.title = @"美食";
+    group.color = [UIColor blackColor];
+    return group;
+}
+
 + (GPUImageFilterGroup *)normal {
     GPUImageFilter *filter = [[GPUImageFilter alloc] init]; //默认
     GPUImageFilterGroup *group = [[GPUImageFilterGroup alloc] init];
