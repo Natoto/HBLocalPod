@@ -7,7 +7,7 @@
 //
 
 
-#import "LMCameraFilters.h"
+#import "PPCameraFilters.h"
 #import "PPSlideCaptureView.h"
 
 @interface PPSlideCaptureView()
@@ -16,7 +16,10 @@
     BOOL isdraging;
 }
 
-@property (retain, nonatomic)  GPUImageView *mainfilterView;
+@property (strong, nonatomic)  GPUImageView *vidioImageView;
+
+//@property (strong, nonatomic)  GPUImageView *pictureImageView;
+
 @property (retain, nonatomic)  GPUImageView *filter2View;
 
 @property (nonatomic, strong)  UIImageView * maskview;
@@ -27,7 +30,7 @@
 @end
 
 @implementation PPSlideCaptureView
-
+//@synthesize pictureImageView = _pictureImageView;
 -(void)dealloc{
     NSLog(@"%s",__func__);
 }
@@ -55,36 +58,21 @@
     self.maskview = imageview2;
     
     [self.ftgroups enumerateObjectsUsingBlock:^(GPUImageFilterGroup * obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        [self.camera addTarget:obj];
+        [self.stillCamera addTarget:obj];
     }];
     
-    GPUImageFilterGroup *f1 = self.ftgroups[0];//[LMCameraFilters sketch];
+    GPUImageFilterGroup *f1 = self.ftgroups[0];//[PPCameraFilters sketch];
     
-    [f1 addTarget:self.mainfilterView];
+    [f1 addTarget:self.vidioImageView];
     self.currentIndex = 0;
     
-    GPUImageFilterGroup *f2 = self.ftgroups[1]; //[LMCameraFilters contrast];
+    GPUImageFilterGroup *f2 = self.ftgroups[1]; //[PPCameraFilters contrast];
     [f2 addTarget:self.filter2View];
     self.maskIndex = 1;
     
 }
 
 
--(GPUImageView *)mainfilterView{
-    if (!_mainfilterView) {
-        _mainfilterView = [[GPUImageView alloc] initWithFrame:self.bounds];
-        [self addSubview:_mainfilterView];
-    }
-    return _mainfilterView;
-}
-
--(GPUImageView *)filter2View{
-    if (!_filter2View) {
-        _filter2View = [[GPUImageView alloc] initWithFrame:self.mainfilterView.bounds];
-        [self.mainfilterView addSubview:_filter2View];
-    }
-    return _filter2View;
-}
 
 /**
  * 当前滤镜
@@ -96,7 +84,7 @@
 //更新maskview滤镜
 - (void)updateMaskFilterAtIndex:(NSInteger)index {
     
-    NSLog(@"%s %d",__func__,index);
+//    NSLog(@"%s %d",__func__,index);
     GPUImageFilterGroup * oldf2 = self.ftgroups[self.maskIndex];
     [oldf2 removeTarget:self.filter2View];
     
@@ -105,14 +93,21 @@
     self.maskIndex = index;
     
 }
+
+
 //本身
 - (void)updateFilterAtIndex:(NSInteger)index {
+
+    NSLog(@"%s %ld",__func__,(long)index);
+    [self.currentGroup removeTarget:self.vidioImageView];
     
-    NSLog(@"%s %d",__func__,index);
-    [self.currentGroup removeTarget:self.mainfilterView];
     GPUImageFilterGroup *filter = self.ftgroups[index];
-    [filter addTarget:self.mainfilterView];
+    [filter addTarget:self.vidioImageView];
+    
     _currentIndex = index;
+    if (self.delegate && [self.delegate respondsToSelector:@selector(PPSlideCaptureView:updateFilterAtIndex:)]) {
+        [self.delegate PPSlideCaptureView:self updateFilterAtIndex:index];
+    }
     
 }
 
@@ -126,11 +121,11 @@
     }
     
     if (!_ftgroups) {
-        GPUImageFilterGroup *f6 = [LMCameraFilters normal];
-        GPUImageFilterGroup *f1 = [LMCameraFilters shiguang]; //ok
-        GPUImageFilterGroup *f2 = [LMCameraFilters shaolv];
-        GPUImageFilterGroup *f3 = [LMCameraFilters yese];
-        GPUImageFilterGroup *f4 = [LMCameraFilters heibai]; //ok
+        GPUImageFilterGroup *f6 = [PPCameraFilters normal];
+        GPUImageFilterGroup *f1 = [PPCameraFilters shiguang]; //ok
+        GPUImageFilterGroup *f2 = [PPCameraFilters shaolv];
+        GPUImageFilterGroup *f3 = [PPCameraFilters yese];
+        GPUImageFilterGroup *f4 = [PPCameraFilters heibai]; //ok
         _ftgroups = @[f6,f1,f2,f3,f4]; 
     }
     return _ftgroups;
@@ -139,19 +134,17 @@
 
 -(void)nextfliter:(NSInteger)idx{
     
-    NSLog(@"%s %d",__func__,idx);
+//    NSLog(@"%s %d",__func__,idx);
     NSInteger nextidx = [self nextindex:idx];
-    //    [self updateMaskFilterAtIndex:[self nextindex:nextidx]];
     [self updateFilterAtIndex:nextidx];
     
 }
 
 -(void)lastfilter:(NSInteger)idx{
     
-    NSLog(@"%s %d",__func__,idx);
+//    NSLog(@"%s %d",__func__,idx);
     NSInteger lastidx = [self lastindex:idx];
     [self updateFilterAtIndex:lastidx];
-    //    [self updateMaskFilterAtIndex:[self lastindex:lastidx]];
 }
 -(NSInteger)lastindex:(NSInteger)idx{
     return  (idx-1)<0?(self.ftgroups.count - 1):(idx-1);
@@ -163,7 +156,7 @@
 
 -(void)movemaskviewfromLeft:(BOOL)isfromLeft isToRight:(BOOL)istoRight{
     
-    NSLog(@"isfromleft:%d istoright:%d",isfromLeft,istoRight);
+//    NSLog(@"isfromleft:%d istoright:%d",isfromLeft,istoRight);
     if (isfromLeft) {
         
         [UIView animateWithDuration:0.5 animations:^{
@@ -270,19 +263,60 @@
     
 }
 
-
 #pragma mark - setter getter 
 
--(GPUImageVideoCamera *)camera{
-    if (!_camera) {
-        GPUImageVideoCamera * camera = [[GPUImageVideoCamera alloc] initWithSessionPreset:AVCaptureSessionPreset1280x720 cameraPosition:AVCaptureDevicePositionBack];
-        camera.outputImageOrientation = UIInterfaceOrientationPortrait;
-        camera.horizontallyMirrorFrontFacingCamera = NO;
-        camera.horizontallyMirrorRearFacingCamera = NO;
-        _camera = camera;
+-(GPUImageView *)vidioImageView{
+    if (!_vidioImageView) {
+        _vidioImageView = [[GPUImageView alloc] initWithFrame:self.bounds];
+        [self addSubview:_vidioImageView];
     }
-    return _camera;
+    return _vidioImageView;
 }
 
+-(GPUImageView *)filter2View{
+    if (!_filter2View) {
+        _filter2View = [[GPUImageView alloc] initWithFrame:self.vidioImageView.bounds];
+        [self.vidioImageView addSubview:_filter2View];
+    }
+    return _filter2View;
+}
+
+//-(GPUImageVideoCamera *)camera{
+//    if (!_camera) {
+//        GPUImageVideoCamera * camera = [[GPUImageVideoCamera alloc] initWithSessionPreset:AVCaptureSessionPreset1280x720 cameraPosition:AVCaptureDevicePositionBack];
+//        camera.outputImageOrientation = UIInterfaceOrientationPortrait;
+//        camera.horizontallyMirrorFrontFacingCamera = NO;
+//        camera.horizontallyMirrorRearFacingCamera = NO;
+//        _camera = camera;
+//    }
+//    return _camera;
+//}
+
+
+- (GPUImageStillCamera *)stillCamera;
+{
+    if (!_stillCamera) {
+        GPUImageStillCamera * imageCamera=[[GPUImageStillCamera alloc] initWithSessionPreset:AVCaptureSessionPreset1280x720 cameraPosition:AVCaptureDevicePositionBack];
+        
+        imageCamera.outputImageOrientation = UIInterfaceOrientationPortrait;
+        imageCamera.horizontallyMirrorFrontFacingCamera = YES;
+        imageCamera.horizontallyMirrorRearFacingCamera = NO;
+        imageCamera.jpegCompressionQuality = 1;
+        GPUImageFilter *filter=[[GPUImageFilter alloc] init]; //默认滤镜.
+        [imageCamera addTarget:filter]; 
+        _stillCamera = imageCamera;
+    }
+    return _stillCamera;
+}
+
+//-(GPUImageView *)pictureImageView{
+//    if (!_pictureImageView) {
+//         GPUImageView *imgView=[[GPUImageView alloc] initWithFrame:CGRectMake(0, 64, 100, 100)];
+//        [self addSubview:imgView];//将显示view加入父类
+//        [self bringSubviewToFront:imgView];
+//        _pictureImageView = imgView;
+//    }
+//    return _pictureImageView;
+//}
 
 @end

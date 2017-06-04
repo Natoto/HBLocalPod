@@ -1,5 +1,5 @@
 //
-//  LMCameraFilters.h
+//  PPCameraFilters.h
 //  GPUImageDemo
 //
 //  Created by xx11dragon on 15/9/22.
@@ -8,7 +8,7 @@
 
 #import "GPUImage.h"
 
-@interface LMCameraFilters : NSObject
+@interface PPCameraFilters : NSObject
 
 //时光、白露、少女、布拉格、黑白 
 +(GPUImageFilterGroup *)heibai;

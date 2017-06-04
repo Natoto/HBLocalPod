@@ -1,16 +1,16 @@
 //
-//  LMCameraFilters.m
+//  PPCameraFilters.m
 //  GPUImageDemo
 //
 //  Created by xx11dragon on 15/9/22.
 //  Copyright © 2015年 xx11dragon. All rights reserved.
 //
 
-#import "LMCameraFilters.h"
-#import "LMFliterGroup.h"
+#import "PPCameraFilters.h"
+#import "PPFliterGroup.h"
 #import "InstaFilters.h"
 
-@implementation LMCameraFilters
+@implementation PPCameraFilters
 
 
 +(GPUImageFilterGroup *)heibai

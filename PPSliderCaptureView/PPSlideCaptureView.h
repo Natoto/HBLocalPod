@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <GPUImage/GPUImage.h>
-#import "LMCameraFilters.h"
+#import "PPCameraFilters.h"
 
 /**
  * 滑动滤镜选择用法
@@ -30,21 +30,29 @@
  [self.model start_stop:sender];
  }
  */
+ 
 
 @class PPSlideCaptureView;
 @protocol PPSlideCaptureViewDelegate
 
 -(NSArray<GPUImageFilterGroup *> *)ftgroupsOfslideCaptureView:(PPSlideCaptureView *)captureView;
 
+@optional
+-(void)PPSlideCaptureView:(PPSlideCaptureView *)captureView updateFilterAtIndex:(NSInteger)index;
 @end
 /**
  * 滑动视频实时滤镜
  */
 @interface PPSlideCaptureView : UIView
 
+@property (strong, nonatomic,readonly)  GPUImageView *vidioImageView;
+
+
 @property (nonatomic, weak) NSObject<PPSlideCaptureViewDelegate> * delegate;
 
-@property (nonatomic, strong) GPUImageVideoCamera * camera;
+//@property (nonatomic, strong) GPUImageVideoCamera * camera;
+//@property (strong, nonatomic,readonly)  GPUImageView *pictureImageView;
+@property (nonatomic, strong) GPUImageStillCamera * stillCamera;
 
 /**
  * 当前滤镜
