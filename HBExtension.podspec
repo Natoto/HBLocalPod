@@ -17,4 +17,5 @@ Pod::Spec.new do |s|
   s.dependency   "MJRefresh" 
   s.dependency   "NIAttributedLabel"
   s.dependency   "FDFullscreenPopGesture"
+  s.dependency   "MBProgressHUD"
 end
