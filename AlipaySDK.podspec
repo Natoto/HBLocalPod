@@ -4,7 +4,7 @@ Pod::Spec.new do |s|
   s.version      = "0.0.2"
   s.summary      = "AlipaySDK desc"
 
-  s.homepage     = "https://github.com/natoto" 
+  s.homepage     = "https://github.com/natoto/HBLocalPod" 
 
   s.author       = { "nonato" => "787038442@qq.com" }
 

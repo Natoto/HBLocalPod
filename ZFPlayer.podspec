@@ -2,7 +2,7 @@ Pod::Spec.new do |s|
     s.name         = 'ZFPlayer'
     s.version      = '2.1.3'
     s.summary      = 'A good player made by renzifeng'
-    s.homepage     = 'https://github.com/renzifeng/ZFPlayer'
+    s.homepage     = "https://github.com/natoto/HBLocalPod"  
     s.license      = 'MIT'
     s.authors      = { 'renzifeng' => 'zifeng1300@gmail.com' }
     #s.platform     = :ios, '7.0'

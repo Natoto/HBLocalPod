@@ -2,8 +2,8 @@ Pod::Spec.new do |s|
 
   s.name         = "FDFullscreenPopGesture"
   s.version      = "0.0.2"
-  s.summary      = "FDFullscreenPopGesture desc" 
-  s.homepage     = "https://github.com/natoto"  
+  s.summary      = "FDFullscreenPopGesture desc"   
+  s.homepage     = "https://github.com/natoto/HBLocalPod"  
   s.author       = { "summer-liu" => "787038442@qq.com" } 
   s.platform     = :ios, "7.0"
   s.source       = { :git => "." }

@@ -3,8 +3,8 @@ Pod::Spec.new do |s|
   s.name         = "CountDownButton"
   s.version      = "0.0.2"
   s.summary      = "CountDownButton desc"
+  s.homepage     = "https://github.com/natoto/HBLocalPod" 
 
-  s.homepage     = "https://github.com/natoto" 
 
   s.author       = { "summer-liu" => "787038442@qq.com" }
 

@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
   s.name         = "HBDataBase"
   s.version      = "1.0.6"
   s.summary      = "对FMDB的轻量级封装，帮助快速创建管理移动端数据库."
-  s.homepage     = "https://github.com/natoto/HBDatabase"
+  s.homepage     = "https://github.com/natoto/HBLocalPod"  
   s.license      = "MIT"
   s.author             = { "HUANGBO" => "nonato@foxmail.com" }
   s.platform     = :ios

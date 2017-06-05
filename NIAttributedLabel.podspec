@@ -4,8 +4,7 @@ Pod::Spec.new do |s|
   s.name         = "NIAttributedLabel"
   s.version      = "0.0.1"
   s.summary      = "NIAttributedLabel desc"  
-  s.homepage     = "" 
-  s.homepage     = "https://github.com/natoto"  
+  s.homepage     = "https://github.com/natoto/HBLocalPod"  
   s.author       = { "huangbo" => "787038442@qq.com" } 
   s.platform     = :ios, "7.0"
   s.source       = { :git => "." } 
