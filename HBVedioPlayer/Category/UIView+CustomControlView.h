@@ -22,10 +22,10 @@
 // THE SOFTWARE.
 
 #import <UIKit/UIKit.h>
-#import "ZFPlayer.h"
+#import "HBVedioPlayer.h"
 
 @interface UIView (CustomControlView)
-@property (nonatomic, weak) id<ZFPlayerControlViewDelagate> delegate;
+@property (nonatomic, weak) id<ZFPlayerControlViewDelagate> zfp_delegate;
 
 /** 
  * 设置播放模型 

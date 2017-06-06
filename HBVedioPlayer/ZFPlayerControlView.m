@@ -305,184 +305,17 @@ static const CGFloat ZFPlayerControlBarAutoFadeOutTimeInterval = 0.35f;
 - (void)layoutSubviews {
     [super layoutSubviews];
     
-    UIInterfaceOrientation currentOrientation = self.statusBarOrientation;
-    if (currentOrientation == UIDeviceOrientationPortrait) {
-        [self setOrientationPortraitConstraint];
-    } else {
-        [self setOrientationLandscapeConstraint];
-    }
+//    UIInterfaceOrientation currentOrientation = [UIApplication sharedApplication].statusBarOrientation;
+//    if (currentOrientation == UIDeviceOrientationPortrait) {
+//        [self setOrientationPortraitConstraint];
+//    } else {
+//        [self setOrientationLandscapeConstraint];
+//    }
 }
 
-#pragma mark - Action
 
-/**
- *  点击切换分别率按钮
- */
-- (void)changeResolution:(UIButton *)sender {
-    sender.selected = YES;
-    if (sender.isSelected) {
-        sender.backgroundColor = RGBA(86, 143, 232, 1);
-    } else {
-        sender.backgroundColor = [UIColor clearColor];
-    }
-    self.resoultionCurrentBtn.selected = NO;
-    self.resoultionCurrentBtn.backgroundColor = [UIColor clearColor];
-    self.resoultionCurrentBtn = sender;
-    // 隐藏分辨率View
-    self.resolutionView.hidden  = YES;
-    // 分辨率Btn改为normal状态
-    self.resolutionBtn.selected = NO;
-    // topImageView上的按钮的文字
-    [self.resolutionBtn setTitle:sender.titleLabel.text forState:UIControlStateNormal];
-    if ([self.delegate respondsToSelector:@selector(zf_controlView:resolutionAction:)]) {
-        [self.delegate zf_controlView:self resolutionAction:sender];
-    }
-}
+#pragma mark - 屏幕方向变化 废弃
 
-/**
- *  UISlider TapAction
- */
-- (void)tapSliderAction:(UITapGestureRecognizer *)tap {
-    if ([tap.view isKindOfClass:[UISlider class]]) {
-        UISlider *slider = (UISlider *)tap.view;
-        CGPoint point = [tap locationInView:slider];
-        CGFloat length = slider.frame.size.width;
-        // 视频跳转的value
-        CGFloat tapValue = point.x / length;
-        if ([self.delegate respondsToSelector:@selector(zf_controlView:progressSliderTap:)]) {
-            [self.delegate zf_controlView:self progressSliderTap:tapValue];
-        }
-    }
-}
-
--(UIInterfaceOrientation)statusBarOrientation{
-    NSNumber * status = [[NSUserDefaults standardUserDefaults] objectForKey:key_zfplayer_statusBarOrientation];
-    return status.intValue;
-}
-// 不做处理，只是为了滑动slider其他地方不响应其他手势
-- (void)panRecognizer:(UIPanGestureRecognizer *)sender {}
-
-- (void)backBtnClick:(UIButton *)sender {
-    // 状态条的方向旋转的方向,来判断当前屏幕的方向
-    UIInterfaceOrientation orientation = self.statusBarOrientation;
-    // 在cell上并且是竖屏时候响应关闭事件
-    if (self.isCellVideo && orientation == UIInterfaceOrientationPortrait) {
-        if ([self.delegate respondsToSelector:@selector(zf_controlView:closeAction:)]) {
-            [self.delegate zf_controlView:self closeAction:sender];
-        }
-    } else {
-        if ([self.delegate respondsToSelector:@selector(zf_controlView:backAction:)]) {
-            [self.delegate zf_controlView:self backAction:sender];
-        }
-    }
-}
-
-- (void)lockScrrenBtnClick:(UIButton *)sender {
-    sender.selected = !sender.selected;
-    self.showing = NO;
-    [self zf_playerShowControlView];
-    if ([self.delegate respondsToSelector:@selector(zf_controlView:lockScreenAction:)]) {
-        [self.delegate zf_controlView:self lockScreenAction:sender];
-    }
-}
-
-- (void)playBtnClick:(UIButton *)sender {
-    sender.selected = !sender.selected;
-    if ([self.delegate respondsToSelector:@selector(zf_controlView:playAction:)]) {
-        [self.delegate zf_controlView:self playAction:sender];
-    }
-}
-
-- (void)closeBtnClick:(UIButton *)sender {
-    if ([self.delegate respondsToSelector:@selector(zf_controlView:closeAction:)]) {
-        [self.delegate zf_controlView:self closeAction:sender];
-    }
-}
-
-- (void)fullScreenBtnClick:(UIButton *)sender {
-    sender.selected = !sender.selected;
-    if ([self.delegate respondsToSelector:@selector(zf_controlView:fullScreenAction:)]) {
-        [self.delegate zf_controlView:self fullScreenAction:sender];
-    }
-}
-
-- (void)repeatBtnClick:(UIButton *)sender {
-    // 重置控制层View
-    [self zf_playerResetControlView];
-    [self zf_playerShowControlView];
-    if ([self.delegate respondsToSelector:@selector(zf_controlView:repeatPlayAction:)]) {
-        [self.delegate zf_controlView:self repeatPlayAction:sender];
-    }
-}
-
-- (void)downloadBtnClick:(UIButton *)sender {
-    if ([self.delegate respondsToSelector:@selector(zf_controlView:downloadVideoAction:)]) {
-        [self.delegate zf_controlView:self downloadVideoAction:sender];
-    }
-}
-
-- (void)resolutionBtnClick:(UIButton *)sender {
-    sender.selected = !sender.selected;
-    // 显示隐藏分辨率View
-    self.resolutionView.hidden = !sender.isSelected;
-}
-
-- (void)centerPlayBtnClick:(UIButton *)sender {
-    if ([self.delegate respondsToSelector:@selector(zf_controlView:cneterPlayAction:)]) {
-        [self.delegate zf_controlView:self cneterPlayAction:sender];
-    }
-}
-
-- (void)failBtnClick:(UIButton *)sender {
-    self.failBtn.hidden = YES;
-    if ([self.delegate respondsToSelector:@selector(zf_controlView:failAction:)]) {
-        [self.delegate zf_controlView:self failAction:sender];
-    }
-}
-
-- (void)progressSliderTouchBegan:(ASValueTrackingSlider *)sender {
-    [self zf_playerCancelAutoFadeOutControlView];
-    self.videoSlider.popUpView.hidden = YES;
-    if ([self.delegate respondsToSelector:@selector(zf_controlView:progressSliderTouchBegan:)]) {
-        [self.delegate zf_controlView:self progressSliderTouchBegan:sender];
-    }
-}
-
-- (void)progressSliderValueChanged:(ASValueTrackingSlider *)sender {
-    if ([self.delegate respondsToSelector:@selector(zf_controlView:progressSliderValueChanged:)]) {
-        [self.delegate zf_controlView:self progressSliderValueChanged:sender];
-    }
-}
-
-- (void)progressSliderTouchEnded:(ASValueTrackingSlider *)sender {
-    self.showing = YES;
-    if ([self.delegate respondsToSelector:@selector(zf_controlView:progressSliderTouchEnded:)]) {
-        [self.delegate zf_controlView:self progressSliderTouchEnded:sender];
-    }
-}
-
-/**
- *  应用退到后台
- */
-- (void)appDidEnterBackground {
-    [self zf_playerCancelAutoFadeOutControlView];
-}
-
-/**
- *  应用进入前台
- */
-- (void)appDidEnterPlayground {
-    if (!self.isShrink) { [self zf_playerShowControlView]; }
-}
-
-- (void)playerPlayDidEnd {
-    self.backgroundColor  = RGBA(0, 0, 0, .6);
-    self.repeatBtn.hidden = NO;
-    // 初始化显示controlView为YES
-    self.showing = NO;
-    // 延迟隐藏controlView
-    [self zf_playerShowControlView];
-}
 
 /**
  *  屏幕方向发生变化会调用这里
@@ -519,16 +352,183 @@ static const CGFloat ZFPlayerControlBarAutoFadeOutTimeInterval = 0.35f;
 - (void)setOrientationPortraitConstraint {
     self.fullScreen             = NO;
     self.lockBtn.hidden         = !self.isFullScreen;
-    self.fullScreenBtn.selected = self.isFullScreen;
+    //    self.fullScreenBtn.selected = self.isFullScreen;
     [self.backBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.topImageView.mas_top).offset(3);
         make.leading.equalTo(self.topImageView.mas_leading).offset(10);
         make.width.height.mas_equalTo(40);
     }];
-
+    
     if (self.isCellVideo) {
         [self.backBtn setImage:ZFPlayerImage(@"ZFPlayer_close") forState:UIControlStateNormal];
     }
+}
+
+
+#pragma mark - Action
+
+/**
+ *  点击切换分别率按钮
+ */
+- (void)changeResolution:(UIButton *)sender {
+    sender.selected = YES;
+    if (sender.isSelected) {
+        sender.backgroundColor = RGBA(86, 143, 232, 1);
+    } else {
+        sender.backgroundColor = [UIColor clearColor];
+    }
+    self.resoultionCurrentBtn.selected = NO;
+    self.resoultionCurrentBtn.backgroundColor = [UIColor clearColor];
+    self.resoultionCurrentBtn = sender;
+    // 隐藏分辨率View
+    self.resolutionView.hidden  = YES;
+    // 分辨率Btn改为normal状态
+    self.resolutionBtn.selected = NO;
+    // topImageView上的按钮的文字
+    [self.resolutionBtn setTitle:sender.titleLabel.text forState:UIControlStateNormal];
+    if ([self.zfp_delegate respondsToSelector:@selector(zf_controlView:resolutionAction:)]) {
+        [self.zfp_delegate zf_controlView:self resolutionAction:sender];
+    }
+}
+
+/**
+ *  UISlider TapAction
+ */
+- (void)tapSliderAction:(UITapGestureRecognizer *)tap {
+    if ([tap.view isKindOfClass:[UISlider class]]) {
+        UISlider *slider = (UISlider *)tap.view;
+        CGPoint point = [tap locationInView:slider];
+        CGFloat length = slider.frame.size.width;
+        // 视频跳转的value
+        CGFloat tapValue = point.x / length;
+        if ([self.zfp_delegate respondsToSelector:@selector(zf_controlView:progressSliderTap:)]) {
+            [self.zfp_delegate zf_controlView:self progressSliderTap:tapValue];
+        }
+    }
+}
+// 不做处理，只是为了滑动slider其他地方不响应其他手势
+- (void)panRecognizer:(UIPanGestureRecognizer *)sender {}
+
+- (void)backBtnClick:(UIButton *)sender {
+    // 状态条的方向旋转的方向,来判断当前屏幕的方向
+    UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+    // 在cell上并且是竖屏时候响应关闭事件
+    if (self.isCellVideo && orientation == UIInterfaceOrientationPortrait) {
+        if ([self.zfp_delegate respondsToSelector:@selector(zf_controlView:closeAction:)]) {
+            [self.zfp_delegate zf_controlView:self closeAction:sender];
+        }
+    } else {
+        if ([self.zfp_delegate respondsToSelector:@selector(zf_controlView:backAction:)]) {
+            [self.zfp_delegate zf_controlView:self backAction:sender];
+        }
+    }
+}
+
+- (void)lockScrrenBtnClick:(UIButton *)sender {
+    sender.selected = !sender.selected;
+    self.showing = NO;
+    [self zf_playerShowControlView];
+    if ([self.zfp_delegate respondsToSelector:@selector(zf_controlView:lockScreenAction:)]) {
+        [self.zfp_delegate zf_controlView:self lockScreenAction:sender];
+    }
+}
+
+- (void)playBtnClick:(UIButton *)sender {
+    sender.selected = !sender.selected;
+    if ([self.zfp_delegate respondsToSelector:@selector(zf_controlView:playAction:)]) {
+        [self.zfp_delegate zf_controlView:self playAction:sender];
+    }
+}
+
+- (void)closeBtnClick:(UIButton *)sender {
+    if ([self.zfp_delegate respondsToSelector:@selector(zf_controlView:closeAction:)]) {
+        [self.zfp_delegate zf_controlView:self closeAction:sender];
+    }
+}
+
+- (void)fullScreenBtnClick:(UIButton *)sender {
+    sender.selected = !sender.selected;
+    if ([self.zfp_delegate respondsToSelector:@selector(zf_controlView:fullScreenAction:)]) {
+        [self.zfp_delegate zf_controlView:self fullScreenAction:sender];
+    }
+}
+
+- (void)repeatBtnClick:(UIButton *)sender {
+    // 重置控制层View
+    [self zf_playerResetControlView];
+    [self zf_playerShowControlView];
+    if ([self.zfp_delegate respondsToSelector:@selector(zf_controlView:repeatPlayAction:)]) {
+        [self.zfp_delegate zf_controlView:self repeatPlayAction:sender];
+    }
+}
+
+- (void)downloadBtnClick:(UIButton *)sender {
+    if ([self.zfp_delegate respondsToSelector:@selector(zf_controlView:downloadVideoAction:)]) {
+        [self.zfp_delegate zf_controlView:self downloadVideoAction:sender];
+    }
+}
+
+- (void)resolutionBtnClick:(UIButton *)sender {
+    sender.selected = !sender.selected;
+    // 显示隐藏分辨率View
+    self.resolutionView.hidden = !sender.isSelected;
+}
+
+- (void)centerPlayBtnClick:(UIButton *)sender {
+    if ([self.zfp_delegate respondsToSelector:@selector(zf_controlView:cneterPlayAction:)]) {
+        [self.zfp_delegate zf_controlView:self cneterPlayAction:sender];
+    }
+}
+
+- (void)failBtnClick:(UIButton *)sender {
+    self.failBtn.hidden = YES;
+    if ([self.zfp_delegate respondsToSelector:@selector(zf_controlView:failAction:)]) {
+        [self.zfp_delegate zf_controlView:self failAction:sender];
+    }
+}
+
+- (void)progressSliderTouchBegan:(ASValueTrackingSlider *)sender {
+    [self zf_playerCancelAutoFadeOutControlView];
+    self.videoSlider.popUpView.hidden = YES;
+    if ([self.zfp_delegate respondsToSelector:@selector(zf_controlView:progressSliderTouchBegan:)]) {
+        [self.zfp_delegate zf_controlView:self progressSliderTouchBegan:sender];
+    }
+}
+
+- (void)progressSliderValueChanged:(ASValueTrackingSlider *)sender {
+    if ([self.zfp_delegate respondsToSelector:@selector(zf_controlView:progressSliderValueChanged:)]) {
+        [self.zfp_delegate zf_controlView:self progressSliderValueChanged:sender];
+    }
+}
+
+- (void)progressSliderTouchEnded:(ASValueTrackingSlider *)sender {
+    self.showing = YES;
+    if ([self.zfp_delegate respondsToSelector:@selector(zf_controlView:progressSliderTouchEnded:)]) {
+        [self.zfp_delegate zf_controlView:self progressSliderTouchEnded:sender];
+    }
+}
+
+/**
+ *  应用退到后台
+ */
+- (void)appDidEnterBackground {
+    [self zf_playerCancelAutoFadeOutControlView];
+}
+
+/**
+ *  应用进入前台
+ */
+- (void)appDidEnterPlayground {
+    if (!self.isShrink) { [self zf_playerShowControlView]; }
+}
+
+- (void)playerPlayDidEnd {
+    self.backgroundColor  = RGBA(0, 0, 0, .6);
+    self.repeatBtn.hidden = NO;
+    // 初始化显示controlView为YES
+    self.showing = NO;
+    // 延迟隐藏controlView
+    [self zf_playerShowControlView];
 }
 
 #pragma mark - Private Method
@@ -570,11 +570,11 @@ static const CGFloat ZFPlayerControlBarAutoFadeOutTimeInterval = 0.35f;
  *  监听设备旋转通知
  */
 - (void)listeningRotating {
-    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(onDeviceOrientationChange)
-                                                 name:UIDeviceOrientationDidChangeNotification
-                                               object:nil];
+//    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(onDeviceOrientationChange)
+//                                                 name:UIDeviceOrientationDidChangeNotification
+//                                               object:nil];
 }
 
 
@@ -619,6 +619,7 @@ static const CGFloat ZFPlayerControlBarAutoFadeOutTimeInterval = 0.35f;
 - (UIButton *)backBtn {
     if (!_backBtn) {
         _backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        _backBtn.showsTouchWhenHighlighted = YES;
         [_backBtn setImage:ZFPlayerImage(@"ZFPlayer_back_full") forState:UIControlStateNormal];
         [_backBtn addTarget:self action:@selector(backBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     }
@@ -743,6 +744,7 @@ static const CGFloat ZFPlayerControlBarAutoFadeOutTimeInterval = 0.35f;
         _fullScreenBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         [_fullScreenBtn setImage:ZFPlayerImage(@"ZFPlayer_fullscreen") forState:UIControlStateNormal];
         [_fullScreenBtn setImage:ZFPlayerImage(@"ZFPlayer_shrinkscreen") forState:UIControlStateSelected];
+        _fullScreenBtn.showsTouchWhenHighlighted = YES;
         [_fullScreenBtn addTarget:self action:@selector(fullScreenBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _fullScreenBtn;
@@ -951,8 +953,8 @@ static const CGFloat ZFPlayerControlBarAutoFadeOutTimeInterval = 0.35f;
  *  显示控制层
  */
 - (void)zf_playerShowControlView {
-    if ([self.delegate respondsToSelector:@selector(zf_controlViewWillShow:isFullscreen:)]) {
-        [self.delegate zf_controlViewWillShow:self isFullscreen:self.isFullScreen];
+    if ([self.zfp_delegate respondsToSelector:@selector(zf_controlViewWillShow:isFullscreen:)]) {
+        [self.zfp_delegate zf_controlViewWillShow:self isFullscreen:self.isFullScreen];
     }
     [self zf_playerCancelAutoFadeOutControlView];
     [UIView animateWithDuration:ZFPlayerControlBarAutoFadeOutTimeInterval animations:^{
@@ -967,8 +969,8 @@ static const CGFloat ZFPlayerControlBarAutoFadeOutTimeInterval = 0.35f;
  *  隐藏控制层
  */
 - (void)zf_playerHideControlView {
-    if ([self.delegate respondsToSelector:@selector(zf_controlViewWillHidden:isFullscreen:)]) {
-        [self.delegate zf_controlViewWillHidden:self isFullscreen:self.isFullScreen];
+    if ([self.zfp_delegate respondsToSelector:@selector(zf_controlViewWillHidden:isFullscreen:)]) {
+        [self.zfp_delegate zf_controlViewWillHidden:self isFullscreen:self.isFullScreen];
     }
     [self zf_playerCancelAutoFadeOutControlView];
     [UIView animateWithDuration:ZFPlayerControlBarAutoFadeOutTimeInterval animations:^{

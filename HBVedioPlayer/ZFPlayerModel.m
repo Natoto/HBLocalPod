@@ -21,7 +21,7 @@
 // THE SOFTWARE.
 
 #import "ZFPlayerModel.h"
-#import "ZFPlayer.h"
+#import "HBVedioPlayer.h"
 
 @implementation ZFPlayerModel
 

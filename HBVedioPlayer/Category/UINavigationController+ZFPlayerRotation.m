@@ -53,6 +53,5 @@
 - (UIViewController *)childViewControllerForStatusBarHidden {
     return self.visibleViewController;
 }
- 
-    
+
 @end

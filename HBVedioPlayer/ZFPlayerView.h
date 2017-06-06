@@ -22,7 +22,7 @@
 // THE SOFTWARE.
 
 #import <UIKit/UIKit.h>
-#import "ZFPlayer.h"
+#import "HBVedioPlayer.h"
 #import "ZFPlayerControlView.h"
 #import "ZFPlayerModel.h"
 #import "ZFPlayerControlViewDelegate.h"
@@ -31,12 +31,19 @@
 @optional
 /** 返回按钮事件 */
 - (void)zf_playerBackAction;
+
+/**
+ * 全屏事件
+ */
+- (void)zf_playerFullScreenAction;
+
 /** 下载视频 */
 - (void)zf_playerDownload:(NSString *)url;
 /** 控制层即将显示 */
 - (void)zf_playerControlViewWillShow:(UIView *)controlView isFullscreen:(BOOL)fullscreen;
 /** 控制层即将隐藏 */
 - (void)zf_playerControlViewWillHidden:(UIView *)controlView isFullscreen:(BOOL)fullscreen;
+
 
 @end
 
@@ -64,6 +71,8 @@ typedef NS_ENUM(NSInteger, ZFPlayerState) {
 @property (nonatomic, assign) BOOL                    hasDownload;
 /** 是否开启预览图 */
 @property (nonatomic, assign) BOOL                    hasPreviewView;
+/** 是否为全屏 */
+@property (nonatomic, assign) BOOL                   isFullScreen;
 /** 设置代理 */
 @property (nonatomic, weak) id<ZFPlayerDelegate>      delegate;
 /** 是否被用户暂停 */
@@ -79,7 +88,6 @@ typedef NS_ENUM(NSInteger, ZFPlayerState) {
 /** player在栈上，即此时push或者模态了新控制器 */
 @property (nonatomic, assign) BOOL                    playerPushedOrPresented;
 
-@property (nonatomic, assign) UIInterfaceOrientation   statusBarOrientation;
 /**
  *  单例，用于列表cell上多个视频
  *

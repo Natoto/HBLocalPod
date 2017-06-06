@@ -22,7 +22,7 @@
 // THE SOFTWARE.
 
 #import "ZFBrightnessView.h"
-#import "ZFPlayer.h"
+#import "HBVedioPlayer.h"
 
 @interface ZFBrightnessView ()
 

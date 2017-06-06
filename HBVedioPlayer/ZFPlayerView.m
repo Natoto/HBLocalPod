@@ -25,7 +25,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <MediaPlayer/MediaPlayer.h>
 #import "UIView+CustomControlView.h"
-#import "ZFPlayer.h"
+#import "HBVedioPlayer.h"
 
 #define CellPlayerFatherViewTag  200
 
@@ -57,8 +57,6 @@ typedef NS_ENUM(NSInteger, PanDirection){
 @property (nonatomic, assign) PanDirection           panDirection;
 /** 播发器的几种状态 */
 @property (nonatomic, assign) ZFPlayerState          state;
-/** 是否为全屏 */
-@property (nonatomic, assign) BOOL                   isFullScreen;
 /** 是否锁定屏幕方向 */
 @property (nonatomic, assign) BOOL                   isLocked;
 /** 是否在调节音量*/
@@ -116,16 +114,9 @@ typedef NS_ENUM(NSInteger, PanDirection){
 @property (nonatomic, assign) NSInteger              seekTime;
 @property (nonatomic, strong) NSURL                  *videoURL;
 @property (nonatomic, strong) NSDictionary           *resolutionDic;
-    
- 
-
-    
-
 @end
 
 @implementation ZFPlayerView
-
-@synthesize statusBarOrientation=_statusBarOrientation;
 
 #pragma mark - life Cycle
 
@@ -191,14 +182,14 @@ typedef NS_ENUM(NSInteger, PanDirection){
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(audioRouteChangeListenerCallback:) name:AVAudioSessionRouteChangeNotification object:nil];
     
     // 监测设备方向
-    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(onDeviceOrientationChange)
-                                                 name:UIDeviceOrientationDidChangeNotification
-                                               object:nil];
+//    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(onDeviceOrientationChange)
+//                                                 name:UIDeviceOrientationDidChangeNotification
+//                                               object:nil];
     
 //    [[NSNotificationCenter defaultCenter] addObserver:self
-//                                             selector:@selector(self.statusBarOrientationChange)
+//                                             selector:@selector(onStatusBarOrientationChange)
 //                                                 name:UIApplicationDidChangeStatusBarOrientationNotification
 //                                               object:nil];
 }
@@ -694,7 +685,7 @@ typedef NS_ENUM(NSInteger, PanDirection){
 
 - (void)toOrientation:(UIInterfaceOrientation)orientation {
     // 获取到当前状态条的方向
-    UIInterfaceOrientation currentOrientation = self.statusBarOrientation;
+    UIInterfaceOrientation currentOrientation = [UIApplication sharedApplication].statusBarOrientation;
     // 判断如果当前方向和要旋转的方向一致,那么不做任何操作
     if (currentOrientation == orientation) { return; }
     
@@ -714,14 +705,14 @@ typedef NS_ENUM(NSInteger, PanDirection){
     }
     // iOS6.0之后,设置状态条的方法能使用的前提是shouldAutorotate为NO,也就是说这个视图控制器内,旋转要关掉;
     // 也就是说在实现这个方法的时候-(BOOL)shouldAutorotate返回值要为NO
-    self.statusBarOrientation = orientation;
+    [[UIApplication sharedApplication] setStatusBarOrientation:orientation animated:NO];
     // 获取旋转状态条需要的时间:
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:0.3];
     // 更改了状态条的方向,但是设备方向UIInterfaceOrientation还是正方向的,这就要设置给你播放视频的视图的方向设置旋转
     // 给你的播放视频的view视图设置旋转
     self.transform = CGAffineTransformIdentity;
-    self.transform = [self getTransformRotationAngle:orientation];
+    self.transform = [self getTransformRotationAngle];
     // 开始旋转
     [UIView commitAnimations];
 }
@@ -731,9 +722,9 @@ typedef NS_ENUM(NSInteger, PanDirection){
  *
  * @return 角度
  */
-- (CGAffineTransform)getTransformRotationAngle:(UIInterfaceOrientation)orientation {
+- (CGAffineTransform)getTransformRotationAngle {
     // 状态条的方向已经设置过,所以这个就是你想要旋转的方向
-//    UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+    UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
     // 根据要进行旋转的方向来计算旋转的角度
     if (orientation == UIInterfaceOrientationPortrait) {
         return CGAffineTransformIdentity;
@@ -809,26 +800,11 @@ typedef NS_ENUM(NSInteger, PanDirection){
     }
 }
 
--(void)setStatusBarOrientation:(UIInterfaceOrientation)statusBarOrientation{
-
-    [[NSUserDefaults standardUserDefaults] setObject:@(statusBarOrientation) forKey:key_zfplayer_statusBarOrientation];
-    _statusBarOrientation = statusBarOrientation;
-}
-
--(UIInterfaceOrientation)statusBarOrientation{
-    if (!_statusBarOrientation) {
-       NSNumber * status = [[NSUserDefaults standardUserDefaults] objectForKey:key_zfplayer_statusBarOrientation];
-        _statusBarOrientation = status.intValue;
-    }
-    return _statusBarOrientation;
-}
-
 // 状态条变化通知（在前台播放才去处理）
-
-- (void)statusBarOrientationChange:(UIInterfaceOrientation)currentOrientation {
+- (void)onStatusBarOrientationChange {
     if (!self.didEnterBackground) {
         // 获取到当前状态条的方向
-//        UIInterfaceOrientation currentOrientation = [UIApplication sharedApplication].statusBarOrientation;
+        UIInterfaceOrientation currentOrientation = [UIApplication sharedApplication].statusBarOrientation;
         if (currentOrientation == UIInterfaceOrientationPortrait) {
             [self setOrientationPortraitConstraint];
             if (self.cellPlayerOnCenter) {
@@ -1008,6 +984,14 @@ typedef NS_ENUM(NSInteger, PanDirection){
 
 /** 全屏 */
 - (void)_fullScreenAction {
+
+   if ([self.delegate respondsToSelector:@selector(zf_playerFullScreenAction)]) {
+       [self.delegate zf_playerFullScreenAction];
+       NSLog(@"外部控制全屏事件");
+       self.isFullScreen = ! self.isFullScreen;
+      return;
+   }
+   
     if (ZFPlayerShared.isLockScreen) {
         [self unLockTheScreen];
         return;
@@ -1380,7 +1364,7 @@ typedef NS_ENUM(NSInteger, PanDirection){
 - (void)setControlView:(UIView *)controlView {
     if (_controlView) { return; }
     _controlView = controlView;
-    controlView.delegate = self;
+    controlView.zfp_delegate = self;
     [self addSubview:controlView];
     [controlView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(UIEdgeInsetsZero);
@@ -1414,7 +1398,7 @@ typedef NS_ENUM(NSInteger, PanDirection){
     } else {
         NSCAssert(playerModel.fatherView, @"请指定playerView的faterView");
         [self addPlayerToFatherView:playerModel.fatherView];
-    }
+    } 
     self.videoURL = playerModel.videoURL;
 }
 

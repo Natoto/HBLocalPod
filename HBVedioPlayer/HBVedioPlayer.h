@@ -55,3 +55,6 @@
 #import "UIWindow+CurrentViewController.h"
 #import "ZFPlayerControlViewDelegate.h"
 #import <Masonry/Masonry.h>
+#import "SMDPlayerControl.h"
+
+

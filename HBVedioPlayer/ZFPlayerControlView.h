@@ -23,9 +23,7 @@
 
 #import <UIKit/UIKit.h>
 #import "ASValueTrackingSlider.h"
-#import "ZFPlayer.h"
-
-#define key_zfplayer_statusBarOrientation @"key_zfplayer_statusBarOrientation"
+#import "HBVedioPlayer.h"
 
 @interface ZFPlayerControlView : UIView 
 
