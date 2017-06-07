@@ -6,8 +6,7 @@
 //  Copyright © 2015年 xx11dragon. All rights reserved.
 //
 
-#import "GPUImage.h"
-
+@class GPUImageFilterGroup;
 @interface PPCameraFilters : NSObject
 
 //时光、白露、少女、布拉格、黑白 

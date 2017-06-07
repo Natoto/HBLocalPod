@@ -6,6 +6,7 @@
 //  Copyright © 2015年 xx11dragon. All rights reserved.
 //
 
+#import <GPUImage/GPUImage.h>
 #import "PPCameraFilters.h"
 #import "PPFliterGroup.h"
 #import "InstaFilters.h"

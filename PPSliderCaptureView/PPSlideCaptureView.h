@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <GPUImage/GPUImage.h>
 #import "PPCameraFilters.h"
 
 /**
@@ -31,7 +30,8 @@
  }
  */
  
-
+@class GPUImageStillCamera;
+@class GPUImageView;
 @class PPSlideCaptureView;
 @protocol PPSlideCaptureViewDelegate
 

@@ -41,4 +41,6 @@ typedef enum : NSUInteger {
 
 - (void)start_stop:(BOOL)isSelected;
 
++ (void)thumbnailImageForVideo:(NSURL *)videoURL atTime:(NSTimeInterval)time image: (void(^)(UIImage* image)) imageblock;
+
 @end

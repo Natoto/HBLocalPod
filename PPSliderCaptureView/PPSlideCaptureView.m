@@ -10,6 +10,8 @@
 #import "PPCameraFilters.h"
 #import "PPSlideCaptureView.h"
 
+#import <GPUImage/GPUImage.h>
+
 @interface PPSlideCaptureView()
 {
     CGPoint beginpoint;
