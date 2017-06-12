@@ -74,6 +74,7 @@
     self.transform = CGAffineTransformIdentity;
     self.centerView.bounds = CGRectZero;
     self.processLayer.strokeEnd =0;
+    
 }
 
 - (void)updateProcess

@@ -36,7 +36,7 @@
 /**
  * 第二中方法处理水印
  */
-- (void) createWatermark:(CATextLayer *)lable video:(NSURL*)videoURL
+- (void) av_createWatermark:(CATextLayer *)lable video:(NSURL*)videoURL
                 complete:(void(^)(NSURL * savepath))complete;
 /**
  * 保存视频到相册

@@ -127,7 +127,7 @@
     //    GPUImageTransformFilter 动画的filter
     self.uielement = uielement;
     
-    NSString * filename = [NSString stringWithFormat:@"Documents/movie%.0f.m4v",[[NSDate date] timeIntervalSince1970]];
+    NSString * filename = [NSString stringWithFormat:@"Documents/movie%.0f%.0fx%.0f.m4v",[[NSDate date] timeIntervalSince1970],size.width,size.height];
     NSString *pathToMovie = [NSHomeDirectory() stringByAppendingPathComponent:filename];
 //    unlink([pathToMovie UTF8String]);
     
@@ -213,102 +213,194 @@
 /**
  * 第二种方式添加水印
  */
-- (void) createWatermark:(CATextLayer *)lable video:(NSURL*)videoURL
+- (void) av_createWatermark:(CATextLayer *)lable video:(NSURL*)videoURL
                 complete:(void(^)(NSURL * savepath))complete
 {
     if (videoURL == nil)
         return;
+    
     AVURLAsset* videoAsset = [[AVURLAsset alloc]initWithURL:videoURL options:nil];
     AVMutableComposition* mixComposition = [AVMutableComposition composition];
     
-    AVMutableCompositionTrack* compositionVideoTrack = [mixComposition addMutableTrackWithMediaType:AVMediaTypeVideo  preferredTrackID:kCMPersistentTrackID_Invalid];
+    AVMutableCompositionTrack *compositionVideoTrack = [mixComposition addMutableTrackWithMediaType:AVMediaTypeVideo preferredTrackID:kCMPersistentTrackID_Invalid];
+    AVAssetTrack *clipVideoTrack = [[videoAsset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
+    AVMutableCompositionTrack *compositionAudioTrack = [mixComposition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
+    AVAssetTrack *clipAudioTrack = [[videoAsset tracksWithMediaType:AVMediaTypeAudio] objectAtIndex:0];
+    //If you need audio as well add the Asset Track for audio here
     
-    AVAssetTrack* clipVideoTrack = [[videoAsset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
-    [compositionVideoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, videoAsset.duration)
-                                   ofTrack:clipVideoTrack
-                                    atTime:kCMTimeZero error:nil];
+    [compositionVideoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, videoAsset.duration) ofTrack:clipVideoTrack atTime:kCMTimeZero error:nil];
+    [compositionAudioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, videoAsset.duration) ofTrack:clipAudioTrack atTime:kCMTimeZero error:nil];
     
     [compositionVideoTrack setPreferredTransform:[[[videoAsset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0] preferredTransform]];
     
-    AVAssetTrack* videoTrack = [[videoAsset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
-    CGSize videoSize = [videoTrack naturalSize];
+    CGSize sizeOfVideo=[videoAsset naturalSize];
+    //NSLog(@"sizeOfVideo.width is %f",sizeOfVideo.width);
+    //NSLog(@"sizeOfVideo.height is %f",sizeOfVideo.height);
+    //TextLayer defines the text they want to add in Video
     
-    CALayer *parentLayer = [CALayer layer];
-    CALayer *videoLayer = [CALayer layer];
-    parentLayer.frame = CGRectMake(0, 0, videoSize.width, videoSize.height);
-    videoLayer.frame = CGRectMake(0, 0, videoSize.width, videoSize.height);
+    CATextLayer *textOfvideo= lable;
+    
+//    [[CATextLayer alloc] init];
+//    textOfvideo.string=[NSString stringWithFormat:@"%@",text];//text is shows the text that you want add in video.
+//    [textOfvideo setFont:(__bridge CFTypeRef)([UIFont fontWithName:[NSString stringWithFormat:@"%@",fontUsed] size:13])];//fontUsed is the name of font
+//    [textOfvideo setFrame:CGRectMake(0, 0, sizeOfVideo.width, sizeOfVideo.height/6)];
+//    [textOfvideo setAlignmentMode:kCAAlignmentCenter];
+//    [textOfvideo setForegroundColor:[selectedColour CGColor]];
+    
+    
+    CALayer *optionalLayer=[CALayer layer];
+    [optionalLayer addSublayer:textOfvideo];
+    optionalLayer.frame=CGRectMake(0, 0, sizeOfVideo.width, sizeOfVideo.height);
+    [optionalLayer setMasksToBounds:YES];
+    
+    CALayer *parentLayer=[CALayer layer];
+    CALayer *videoLayer=[CALayer layer];
+    parentLayer.frame=CGRectMake(0, 0, sizeOfVideo.width, sizeOfVideo.height);
+    videoLayer.frame=CGRectMake(0, 0, sizeOfVideo.width, sizeOfVideo.height);
     [parentLayer addSublayer:videoLayer];
-    [parentLayer addSublayer:lable];
+    [parentLayer addSublayer:optionalLayer];
     
-    //create the composition and add the instructions to insert the layer:
+    AVMutableVideoComposition *videoComposition=[AVMutableVideoComposition videoComposition] ;
+    videoComposition.frameDuration=CMTimeMake(1, 10);
+    videoComposition.renderSize=sizeOfVideo;
+    videoComposition.animationTool=[AVVideoCompositionCoreAnimationTool videoCompositionCoreAnimationToolWithPostProcessingAsVideoLayer:videoLayer inLayer:parentLayer];
     
-    AVMutableVideoComposition* videoComp = [AVMutableVideoComposition videoComposition];
-    videoComp.renderSize = videoSize;
-    videoComp.frameDuration = CMTimeMake(1, 30);
-    videoComp.animationTool = [AVVideoCompositionCoreAnimationTool videoCompositionCoreAnimationToolWithPostProcessingAsVideoLayer:videoLayer inLayer:parentLayer];
-    
-    /// instruction
-    AVMutableVideoCompositionInstruction* instruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
-    
+    AVMutableVideoCompositionInstruction *instruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
     instruction.timeRange = CMTimeRangeMake(kCMTimeZero, [mixComposition duration]);
-    AVAssetTrack* mixVideoTrack = [[mixComposition tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
-    AVMutableVideoCompositionLayerInstruction* layerInstruction = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:mixVideoTrack];
+    AVAssetTrack *videoTrack = [[mixComposition tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
+    AVMutableVideoCompositionLayerInstruction* layerInstruction = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:videoTrack];
     instruction.layerInstructions = [NSArray arrayWithObject:layerInstruction];
-    videoComp.instructions = [NSArray arrayWithObject: instruction];
+    videoComposition.instructions = [NSArray arrayWithObject: instruction];
     
-    // export video
+    NSString *documentsDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)objectAtIndex:0];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd_HH-mm-ss"];
+    NSString *destinationPath = [documentsDirectory stringByAppendingFormat:@"/utput_%@.mov", [dateFormatter stringFromDate:[NSDate date]]];
     
-    _assetExport = [[AVAssetExportSession alloc] initWithAsset:mixComposition presetName:AVAssetExportPresetMediumQuality];
-    _assetExport.videoComposition = videoComp;
+    AVAssetExportSession *exportSession = [[AVAssetExportSession alloc] initWithAsset:mixComposition presetName:AVAssetExportPresetMediumQuality];
+    exportSession.videoComposition=videoComposition;
     
-    NSLog (@"created exporter. supportedFileTypes: %@", _assetExport.supportedFileTypes);
+    exportSession.outputURL = [NSURL fileURLWithPath:destinationPath];
+    exportSession.outputFileType = AVFileTypeQuickTimeMovie;
+    [exportSession exportAsynchronouslyWithCompletionHandler:^{
+        switch (exportSession.status)
+        {
+            case AVAssetExportSessionStatusCompleted:
+                NSLog(@"Export OK");
+                complete(exportSession.outputURL);
+                if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(destinationPath)) {
+                    UISaveVideoAtPathToSavedPhotosAlbum(destinationPath, self, @selector(video:didFinishSavingWithError:contextInfo:), nil);
+                }
+                break;
+            case AVAssetExportSessionStatusFailed:
+                complete(nil);
+                NSLog (@"AVAssetExportSessionStatusFailed: %@", exportSession.error);
+                break;
+            case AVAssetExportSessionStatusCancelled:complete(nil);
+                NSLog(@"Export Cancelled");
+                break;
+        }
+    }];
     
-    NSString* videoName = @"NewWatermarkedVideo.mov";
-    
-    NSString* exportPath = [NSTemporaryDirectory() stringByAppendingPathComponent:videoName];
-    NSURL* exportUrl = [NSURL fileURLWithPath:exportPath];
-    
-    NSLog(@"%@",exportUrl);
-    
-    if ([[NSFileManager defaultManager] fileExistsAtPath:exportPath])
-        [[NSFileManager defaultManager] removeItemAtPath:exportPath error:nil];
-    
-    _assetExport.outputFileType = AVFileTypeQuickTimeMovie;
-    _assetExport.outputURL = exportUrl;
-    _assetExport.shouldOptimizeForNetworkUse = YES;
-    
-    [_assetExport exportAsynchronouslyWithCompletionHandler:
-     ^(void ) {
-         
-         
-         //Final code here
-         
-         switch (_assetExport.status)
-         {
-             case AVAssetExportSessionStatusUnknown:
-                 NSLog(@"Unknown");
-                 break;
-             case AVAssetExportSessionStatusWaiting:
-                 NSLog(@"Waiting");
-                 break;
-             case AVAssetExportSessionStatusExporting:
-                 NSLog(@"Exporting");
-                 break;
-             case AVAssetExportSessionStatusCompleted:
-                 complete(exportUrl);
-                 NSLog(@"Created new water mark image");
-                 
-                 break;
-             case AVAssetExportSessionStatusFailed:
-                 complete(nil);
-                 NSLog(@"Failed- %@", _assetExport.error);
-                 break;
-             case AVAssetExportSessionStatusCancelled:
-                 NSLog(@"Cancelled");
-                 break;
-         }
-     }
-     ];   
+//    AVURLAsset* videoAsset = [[AVURLAsset alloc]initWithURL:videoURL options:nil];
+//    AVMutableComposition* mixComposition = [AVMutableComposition composition];
+//    
+//    AVMutableCompositionTrack* compositionVideoTrack = [mixComposition addMutableTrackWithMediaType:AVMediaTypeVideo  preferredTrackID:kCMPersistentTrackID_Invalid];
+//    
+//    AVAssetTrack* clipVideoTrack = [[videoAsset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
+//    [compositionVideoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, videoAsset.duration)
+//                                   ofTrack:clipVideoTrack
+//                                    atTime:kCMTimeZero error:nil];
+//    
+//    [compositionVideoTrack setPreferredTransform:[[[videoAsset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0] preferredTransform]];
+//    
+//    AVAssetTrack* videoTrack = [[videoAsset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
+//    CGSize videoSize = [videoTrack naturalSize];
+//    
+//    if (!lable) {
+//        lable = [self createtextlayer];
+//    }
+//    
+//    CALayer *parentLayer = [CALayer layer];
+//    CALayer *videoLayer = [CALayer layer];
+//    parentLayer.frame = CGRectMake(0, 0, videoSize.width, videoSize.height);
+//    videoLayer.frame = CGRectMake(0, 0, videoSize.width, videoSize.height);
+//    [parentLayer addSublayer:videoLayer];
+//    [parentLayer addSublayer:lable];
+//    
+//    //create the composition and add the instructions to insert the layer:
+//    
+//    AVMutableVideoComposition* videoComp = [AVMutableVideoComposition videoComposition];
+//    videoComp.renderSize = videoSize;
+//    videoComp.frameDuration = CMTimeMake(1, 30);
+//    videoComp.animationTool = [AVVideoCompositionCoreAnimationTool videoCompositionCoreAnimationToolWithPostProcessingAsVideoLayer:videoLayer inLayer:parentLayer];
+//    
+//    /// instruction
+//    AVMutableVideoCompositionInstruction* instruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
+//    
+//    instruction.timeRange = CMTimeRangeMake(kCMTimeZero, [mixComposition duration]);
+//    AVAssetTrack* mixVideoTrack = [[mixComposition tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
+//    AVMutableVideoCompositionLayerInstruction* layerInstruction = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:mixVideoTrack];
+//    instruction.layerInstructions = [NSArray arrayWithObject:layerInstruction];
+//    videoComp.instructions = [NSArray arrayWithObject: instruction];
+//    
+//    // export video
+//    
+//    _assetExport = [[AVAssetExportSession alloc] initWithAsset:mixComposition presetName:AVAssetExportPresetMediumQuality];
+//    _assetExport.videoComposition = videoComp;
+//    
+//    NSLog (@"created exporter. supportedFileTypes: %@", _assetExport.supportedFileTypes);
+//    
+//    NSString* videoName = @"NewWatermarkedVideo.mov";
+//    
+//    NSString* exportPath = [NSTemporaryDirectory() stringByAppendingPathComponent:videoName];
+//    NSURL* exportUrl = [NSURL fileURLWithPath:exportPath];
+//    
+//    NSLog(@"%@",exportUrl);
+//    
+//    if ([[NSFileManager defaultManager] fileExistsAtPath:exportPath])
+//        [[NSFileManager defaultManager] removeItemAtPath:exportPath error:nil];
+//    
+//    _assetExport.outputFileType = AVFileTypeQuickTimeMovie;
+//    _assetExport.outputURL = exportUrl;
+//    _assetExport.shouldOptimizeForNetworkUse = YES;
+//    
+//    [_assetExport exportAsynchronouslyWithCompletionHandler:
+//     ^(void ) {
+//         
+//         
+//         //Final code here
+//         
+//         switch (_assetExport.status)
+//         {
+//             case AVAssetExportSessionStatusUnknown:
+//                 NSLog(@"Unknown");
+//                 break;
+//             case AVAssetExportSessionStatusWaiting:
+//                 NSLog(@"Waiting");
+//                 break;
+//             case AVAssetExportSessionStatusExporting:
+//                 NSLog(@"Exporting");
+//                 break;
+//             case AVAssetExportSessionStatusCompleted:
+//                 complete(exportUrl);
+//                 NSLog(@"Created new water mark image");
+//                 
+//                 break;
+//             case AVAssetExportSessionStatusFailed:
+//                 complete(nil);
+//                 NSLog(@"Failed- %@", _assetExport.error);
+//                 break;
+//             case AVAssetExportSessionStatusCancelled:
+//                 NSLog(@"Cancelled");
+//                 break;
+//         }
+//     }
+//     ];   
 }
-
+-(void) video: (NSString *) videoPath didFinishSavingWithError: (NSError *) error contextInfo: (void *) contextInfo
+{
+    if(error)
+        NSLog(@"Finished saving video with error: %@", error);
+}
 @end

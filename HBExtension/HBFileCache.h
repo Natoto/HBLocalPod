@@ -17,4 +17,9 @@
 - (NSString *)fileNameForKey:(NSString *)key;
 
 +(void)RemoveFileWithPath:(NSString *)filePath  complete:(void (^)(void)) complteblock;
+
+- (id)objectForKey:(id)key;
+
+- (void)setObject:(id)object forKey:(id)key;
+ 
 @end
