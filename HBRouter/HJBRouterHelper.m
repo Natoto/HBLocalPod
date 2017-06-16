@@ -69,9 +69,10 @@
  */
 -(void)openURLString:(NSString *)URLString forkey:(NSString *)key parameters:(NSDictionary *)parameters animate:(BOOL)animate
 {
-    if (key) {
-        [[HBRouter sharedInstance] mapKey:key toControllerClassName:key];
-    }
+    NSArray * compants = [key componentsSeparatedByString:@"_"];
+    [compants enumerateObjectsUsingBlock:^(NSString * subkey, NSUInteger idx, BOOL * _Nonnull stop) {
+        [[HBRouter sharedInstance] mapKey:subkey toControllerClassName:subkey];
+    }];
     [[HBRouter sharedInstance] openURLString:URLString parameters:parameters animation:animate];
     
 }
