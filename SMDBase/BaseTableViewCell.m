@@ -56,7 +56,7 @@
     [super layoutSubviews];
     
     CGFloat lineheight = 0.3;
-    UIColor * linecolor =  KT_HEXCOLORA(0xd9d9d9, 1);
+    UIColor * linecolor =  KT_HEXCOLORA(0XEEEEEE, 0.5);
     self.toplayer.backgroundColor = linecolor;
     self.bottomlayer.backgroundColor = linecolor;
     

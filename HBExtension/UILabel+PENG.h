@@ -11,6 +11,22 @@
 
 @interface UILabel(PENG)
 
+/**
+ *  改变行间距
+ */
++ (void)changeLineSpaceForLabel:(UILabel *)label WithSpace:(float)space;
+
+/**
+ *  改变字间距
+ */
++ (void)changeWordSpaceForLabel:(UILabel *)label WithSpace:(float)space;
+
+/**
+ *  改变行间距和字间距
+ */
++ (void)changeSpaceForLabel:(UILabel *)label withLineSpace:(float)lineSpace WordSpace:(float)wordSpace;
+
+
 + (UILabel *)CreateLabelWithFrame:(CGRect)frame andTxt:(NSString *)TXT;
 + (UILabel *)CreateLabelWithFrame:(CGRect)frame andTxt:(NSString *)TXT fontsize:(NSUInteger)size;
 

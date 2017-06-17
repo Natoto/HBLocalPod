@@ -9,6 +9,48 @@
 #import "UILabel+PENG.h"
 #import "NIAttributedLabel.h"
 @implementation UILabel(PENG)
+ 
++ (void)changeLineSpaceForLabel:(UILabel *)label WithSpace:(float)space {
+    
+    NSString *labelText = label.text;
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:labelText];
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    paragraphStyle.alignment = label.textAlignment;
+    paragraphStyle.lineBreakMode = label.lineBreakMode;
+    [paragraphStyle setLineSpacing:space];
+    [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [labelText length])];
+    label.attributedText = attributedString;
+    [label sizeToFit];
+    
+}
+
++ (void)changeWordSpaceForLabel:(UILabel *)label WithSpace:(float)space {
+    
+    NSString *labelText = label.text;
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:labelText attributes:@{NSKernAttributeName:@(space)}];
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    paragraphStyle.alignment = label.textAlignment;
+    paragraphStyle.lineBreakMode = label.lineBreakMode;
+    [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [labelText length])];
+    label.attributedText = attributedString;
+    [label sizeToFit];
+    
+}
+
++ (void)changeSpaceForLabel:(UILabel *)label withLineSpace:(float)lineSpace WordSpace:(float)wordSpace {
+    
+    NSString *labelText = label.text;
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:labelText attributes:@{NSKernAttributeName:@(wordSpace)}];
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    paragraphStyle.alignment = label.textAlignment;
+    paragraphStyle.lineBreakMode = label.lineBreakMode;
+    [paragraphStyle setLineSpacing:lineSpace];
+    [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [labelText length])];
+    label.attributedText = attributedString;
+    [label sizeToFit];
+    
+}
+
 
 + (UILabel *)CreateLabelWithFrame:(CGRect)frame andTxt:(NSString *)TXT
 {
