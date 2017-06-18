@@ -104,8 +104,8 @@
  *  从PLIST 文件中加载配置信息
  *
  *  @param plistname plist文件的名字
- */-(void)loadplistConfig:(NSString *)plistname
-
+ */
+-(void)loadplistConfig:(NSString *)plistname
 {
     
 #if DEBUG && TARGET_IPHONE_SIMULATOR 

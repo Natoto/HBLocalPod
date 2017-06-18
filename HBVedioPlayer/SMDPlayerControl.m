@@ -73,7 +73,8 @@
         _actionButton = [UIButton buttonWithType:UIButtonTypeCustom];
         
         [_actionButton setImage:nil forState:UIControlStateNormal];
-        [_actionButton setImage:ZFPlayerImage(@"ic_play") forState:UIControlStateSelected];
+        UIImage * img = ZFPlayerImage(@"ic_play");
+        [_actionButton setImage:img forState:UIControlStateSelected];
         _actionButton.frame = CGRectMake(0, 0, 80, 80);
         _actionButton.center = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2);
         [_actionButton addTarget:self action:@selector(buttonTap:) forControlEvents:UIControlEventTouchUpInside];

@@ -6,12 +6,13 @@
 //  Copyright © 2017年 YY.COM. All rights reserved.
 //
 
+#import "PPGPUImageWriter.h"
 #import "PPCaptureVedioSaveModel.h"
 @interface PPCaptureVedioSaveModel()
 {
     NSString * pathToMovie;
 } 
-@property (nonatomic,retain) GPUImageMovieWriter *writer;
+@property (nonatomic,retain) PPGPUImageWriter *writer;
 
 @property (nonatomic, strong) GPUImageView *videoImageView;
 
@@ -96,7 +97,7 @@
     
     [self.camera removeTarget:self.writer];
     
-    _writer = [[GPUImageMovieWriter alloc] initWithMovieURL:[NSURL fileURLWithPath:self.videoPath] size:CGSizeMake(LZBImageViewWidth , LZBImageViewWidth) fileType:AVFileTypeMPEG4 outputSettings:self.videoSettings];
+    _writer = [[PPGPUImageWriter alloc] initWithMovieURL:[NSURL fileURLWithPath:self.videoPath] size:CGSizeMake(LZBImageViewWidth , LZBImageViewWidth) fileType:AVFileTypeMPEG4 outputSettings:self.videoSettings];
     //防止can't write frame  
     _writer.encodingLiveVideo = YES;
     _writer.assetWriter.movieFragmentInterval = kCMTimeInvalid;
