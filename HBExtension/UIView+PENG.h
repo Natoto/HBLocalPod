@@ -14,6 +14,17 @@
 @property(nonatomic,retain) CALayer * viewleftlayer;
 @property(nonatomic,retain) CALayer * viewrightlayer;
 
+
+
+/**
+ * 假设要加载的Class为MyNibView,
+ xib中必须将File Owner设置成NSObject而非MyNibView！这里我还不是很清楚什么原因，估计是由于Nib的file owner为nil或者其他值
+ 将顶层的UIView的class设置成MyNibView，并通过他设置IBOutlet的映射关系。
+ 顶层的UIView则会被加载后放到数组的第一个位置。
+ */
++ (id)viewFromNib;
+
+
 -(void)cleartopLayer;
 -(void)clearviewbottomlayer;
 -(void)drawbottomlinelayer;

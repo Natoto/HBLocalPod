@@ -17,5 +17,7 @@
  */
 @interface ReusabledXIBView : UIView
 @property(nonatomic,strong) UIView * reusecontentView;
-@property(nonatomic,assign) BOOL isViewLoadedFromNib; 
+@property(nonatomic,assign) BOOL isViewLoadedFromNib;
+
+
 @end
