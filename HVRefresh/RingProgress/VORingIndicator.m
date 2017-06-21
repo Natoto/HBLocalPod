@@ -30,7 +30,7 @@
 }
 
 - (instancetype)init{
-	return [self initWithFrame:CGRectMake(0, 0, 20, 20) andLineColor:[UIColor redColor] andLineBgColor:[UIColor lightGrayColor]];
+	return [self initWithFrame:CGRectMake(0, 0, 20, 20) andLineColor: [UIColor colorWithRed:160/255.0 green:100/255.0 blue:205/255.0 alpha:1/1.0] andLineBgColor:[UIColor lightGrayColor]];
 }
 
 - (instancetype)initWithFrame:(CGRect)frame{
@@ -52,7 +52,7 @@
 		label.textAlignment = NSTextAlignmentCenter;
 		label.textColor = lineColor;
 		label.font = [UIFont systemFontOfSize:diameter * 0.4];
-		label.text = @"1";
+		label.text = @"";
 		label.lineBreakMode = NSLineBreakByCharWrapping;
 		[self addSubview:label];
 		self.centerLabel = label;

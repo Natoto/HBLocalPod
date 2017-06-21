@@ -33,7 +33,8 @@ NSString * const VORingProgressTextAnimationKey = @"VORingProgressTextAnimationK
 }
 
 - (instancetype)init{
-	return [self initWithFrame:CGRectMake(0, 0, 20, 20) andLineColor:[UIColor redColor] andLineBgColor:[UIColor lightGrayColor]];
+//#A064CD 100%
+    return [self initWithFrame:CGRectMake(0, 0, 20, 20) andLineColor: [UIColor colorWithRed:160/255.0 green:100/255.0 blue:205/255.0 alpha:1/1.0] andLineBgColor:[UIColor lightGrayColor]];
 }
 
 - (instancetype)initWithFrame:(CGRect)frame{
@@ -49,7 +50,7 @@ NSString * const VORingProgressTextAnimationKey = @"VORingProgressTextAnimationK
 		self.lineWidth   = diameter / 10;
 		self.lineColor   = lineColor;
 		self.lineBgColor = lineBgColor;
-		self.centerText  = @"1";
+		self.centerText  = @"";
 		self.bounds      = CGRectMake(0, 0, diameter, diameter);
 		self.center      = CGPointMake(CGRectGetMidX(frame), CGRectGetMidY(frame));
 		[self setupRingAnimationLayer];
