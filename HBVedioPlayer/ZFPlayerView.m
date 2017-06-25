@@ -375,7 +375,7 @@ typedef NS_ENUM(NSInteger, PanDirection){
     // 初始化playerLayer
     self.playerLayer = [AVPlayerLayer playerLayerWithPlayer:self.player];
     
-    self.backgroundColor = [UIColor blackColor];
+    self.backgroundColor = [UIColor clearColor];
     // 此处为默认视频填充模式
     self.playerLayer.videoGravity = self.videoGravity;
     
