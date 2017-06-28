@@ -56,6 +56,7 @@
     UIImageView * imageview2 = [[UIImageView alloc] init];
     imageview2.backgroundColor = [UIColor whiteColor];
     imageview2.frame = CGRectMake(0, 0, 0, self.bounds.size.height);
+    imageview2.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     self.filter2View.maskView = imageview2;
     self.maskview = imageview2;
     
@@ -270,6 +271,7 @@
 -(GPUImageView *)vidioImageView{
     if (!_vidioImageView) {
         _vidioImageView = [[GPUImageView alloc] initWithFrame:self.bounds];
+        _vidioImageView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
         [self addSubview:_vidioImageView];
     }
     return _vidioImageView;
@@ -278,6 +280,7 @@
 -(GPUImageView *)filter2View{
     if (!_filter2View) {
         _filter2View = [[GPUImageView alloc] initWithFrame:self.vidioImageView.bounds];
+        _filter2View.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
         [self.vidioImageView addSubview:_filter2View];
     }
     return _filter2View;
