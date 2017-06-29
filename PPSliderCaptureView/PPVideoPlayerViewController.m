@@ -19,7 +19,12 @@
 //    self.button.frame = CGRectMake(20, 20, 40, 40);
     [self imageView];
     if (self.videoPath) {
-        self.player =  [AVPlayer playerWithURL:[NSURL fileURLWithPath:self.videoPath]];
+        if ([self.videoPath containsString:@"http"]) {
+            self.player =  [AVPlayer playerWithURL:[NSURL URLWithString:self.videoPath]];
+        }
+        else{
+            self.player =  [AVPlayer playerWithURL:[NSURL fileURLWithPath:self.videoPath]];
+        }
         _avplayer = [AVPlayerLayer playerLayerWithPlayer:self.player];
         _avplayer.frame = self.view.bounds;
         [self.imageView.layer insertSublayer:_avplayer atIndex:0];

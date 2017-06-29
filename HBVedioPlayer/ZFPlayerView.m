@@ -261,6 +261,7 @@ typedef NS_ENUM(NSInteger, PanDirection){
  *  重置player
  */
 - (void)resetPlayer {
+
     // 改为为播放完
     self.playDidEnd         = NO;
     self.playerItem         = nil;
@@ -371,7 +372,10 @@ typedef NS_ENUM(NSInteger, PanDirection){
     self.playerItem = [AVPlayerItem playerItemWithAsset:self.urlAsset];
     // 每次都重新创建Player，替换replaceCurrentItemWithPlayerItem:，该方法阻塞线程
     self.player = [AVPlayer playerWithPlayerItem:self.playerItem];
-    
+    if([[UIDevice currentDevice] systemVersion].intValue>=10){
+        //      增加下面这行可以解决iOS10兼容性问题了
+        self.player.automaticallyWaitsToMinimizeStalling = NO;
+    }
     // 初始化playerLayer
     self.playerLayer = [AVPlayerLayer playerLayerWithPlayer:self.player];
     
@@ -1278,6 +1282,7 @@ typedef NS_ENUM(NSInteger, PanDirection){
         [self.controlView zf_playerItemPlaying];
     } else if (state == ZFPlayerStateFailed) {
         NSError *error = [self.playerItem error];
+        NSLog(@"[ZFPlayer]:%@",error);
         [self.controlView zf_playerItemStatusFailed:error];
     }
 }

@@ -65,7 +65,7 @@
     self.activity.center = CGPointMake(self.bounds.size.width/2., self.bounds.size.height/2);
     
 }
-
+ 
 
 -(UIButton *)actionButton{
     if (!_actionButton) {

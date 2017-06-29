@@ -1077,6 +1077,7 @@ static const CGFloat ZFPlayerControlBarAutoFadeOutTimeInterval = 0.35f;
 
 /** 视频加载失败 */
 - (void)zf_playerItemStatusFailed:(NSError *)error {
+    NSLog(@"%s: %@",__func__,error);
     self.failBtn.hidden = NO;
 }
 
