@@ -127,8 +127,11 @@
     //    GPUImageTransformFilter 动画的filter
     self.uielement = uielement;
     
-    NSString * filename = [NSString stringWithFormat:@"Documents/movie%.0f%.0fx%.0f.m4v",[[NSDate date] timeIntervalSince1970],size.width,size.height];
-    NSString *pathToMovie = [NSHomeDirectory() stringByAppendingPathComponent:filename];
+    NSString * filename = [NSString stringWithFormat:@"movie%.0f-%.0fx%.0f.mp4",[[NSDate date] timeIntervalSince1970],size.width,size.height];
+    
+    NSArray * paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
+    NSString * parentpathToMovie = [[paths objectAtIndex:0] stringByAppendingFormat:@"/Caches/"];
+    NSString *pathToMovie = [parentpathToMovie stringByAppendingPathComponent:filename];
 //    unlink([pathToMovie UTF8String]);
     
     NSURL *movieURL = [NSURL fileURLWithPath:pathToMovie];
@@ -178,13 +181,83 @@
         [self.filter removeTarget:self.movieWriter];
         [self.movieWriter finishRecording];
         dispatch_async(dispatch_get_main_queue(), ^{
-            complete(movieURL);
+//            complete(movieURL);
+            [[self class] convertVideoWithModel:pathToMovie zippath:^(NSString *zipfilepath) {
+                self.sbxvideoPath = zipfilepath;
+                complete([NSURL fileURLWithPath:zipfilepath]);
+            }];
         });
     }];
 
     self.sbxvideoPath = pathToMovie;
     return pathToMovie;
 }
+
+
+
+/**
+ * TODO: 视频压缩
+ */
++ (void) convertVideoWithModel:(NSString *) sandBoxFilePath zippath:(void(^)(NSString *zipfilepath))zipfilepathblock
+{
+    NSString * filename = sandBoxFilePath.lastPathComponent;
+    //保存至沙盒路径
+    NSArray * paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
+    NSString * pathDocuments = [[paths objectAtIndex:0] stringByAppendingFormat:@"/Caches/zip"];
+    
+    if ( NO == [[NSFileManager defaultManager] fileExistsAtPath:pathDocuments] )
+    {
+        [[NSFileManager defaultManager] createDirectoryAtPath:pathDocuments
+                                         withIntermediateDirectories:YES
+                                                          attributes:nil
+                                                               error:NULL];
+    }
+    
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSString * zippath = [pathDocuments stringByAppendingPathComponent:filename];
+        
+        //转码配置
+        AVURLAsset *asset = [AVURLAsset URLAssetWithURL:[NSURL fileURLWithPath:sandBoxFilePath] options:nil];
+        AVAssetExportSession *exportSession=  [[AVAssetExportSession alloc] initWithAsset:asset presetName:AVAssetExportPresetMediumQuality];
+        exportSession.shouldOptimizeForNetworkUse = YES;
+        exportSession.outputURL = [NSURL fileURLWithPath:zippath];
+        exportSession.outputFileType = AVFileTypeMPEG4;
+        [exportSession exportAsynchronouslyWithCompletionHandler:^{
+            int exportStatus = exportSession.status;
+//            NSLog(@"%d",exportStatus);
+            switch (exportStatus)
+            {
+                case AVAssetExportSessionStatusFailed:
+                {
+                    // log error to text view
+                    NSError *exportError = exportSession.error;
+                    NSLog (@"AVAssetExportSessionStatusFailed: %@", exportError);
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        if (zipfilepathblock) {
+                            zipfilepathblock(sandBoxFilePath);
+                        }
+                    });
+                    break;
+                }
+                case AVAssetExportSessionStatusCompleted:
+                {
+                    NSLog(@"视频转码成功 , 保存压缩路径：%@",zippath);
+//                    NSData *data = [NSData dataWithContentsOfFile:sandBoxFilePath];
+//                    [data writeToFile:zippath atomically:YES];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        if (zipfilepathblock) {
+                            zipfilepathblock(zippath);
+                        }
+                    });
+                }
+            }
+        }];
+        
+    });
+    
+}
+
 
 - (void)updateProgress
 {

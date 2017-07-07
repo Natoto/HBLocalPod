@@ -366,6 +366,7 @@ static BOOL allowWriteAudio = NO;
     });
 }
 
+
 - (void)processAudioBuffer:(CMSampleBufferRef)audioBuffer;
 {
     if (!allowWriteAudio) {
