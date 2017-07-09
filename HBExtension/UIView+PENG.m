@@ -343,8 +343,8 @@ static char  key_rightlayer_p;
 -(void)addgradientlayer:(UIColor *)fromcolor tocolor:(UIColor *)tocolor {
     UIColor * _inputColor0 = fromcolor;//[UIColor colorWithRed:1 green:1 blue:1 alpha:1];
     UIColor * _inputColor1 = tocolor;//[UIColor colorWithRed:1 green:1 blue:1 alpha:0];
-    CGPoint _inputPoint0 = CGPointMake(1, 1);
-    CGPoint _inputPoint1 = CGPointMake(1, 0);
+    CGPoint _inputPoint0 = CGPointMake(.5,1);
+    CGPoint _inputPoint1 = CGPointMake(.5, 0);
     CAGradientLayer *layer = [CAGradientLayer new];
     layer.colors = @[(__bridge id)_inputColor0.CGColor, (__bridge id)_inputColor1.CGColor];
     layer.startPoint = _inputPoint0;

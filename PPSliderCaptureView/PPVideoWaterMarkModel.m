@@ -183,6 +183,14 @@
         dispatch_async(dispatch_get_main_queue(), ^{
 //            complete(movieURL);
             [[self class] convertVideoWithModel:pathToMovie zippath:^(NSString *zipfilepath) {
+                BOOL result = [[NSFileManager defaultManager] removeItemAtURL:url error:nil];
+                if (result) {
+                    NSLog(@"原视频删除成功：%@ \n",url);
+                    BOOL result2 = [[NSFileManager defaultManager] removeItemAtURL:[NSURL fileURLWithPath:pathToMovie] error:nil];
+                    if (result2) {
+                        NSLog(@"滤镜原视频删除成功：%@ \n",pathToMovie);
+                    }
+                }
                 self.sbxvideoPath = zipfilepath;
                 complete([NSURL fileURLWithPath:zipfilepath]);
             }];
@@ -219,7 +227,7 @@
         
         //转码配置
         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:[NSURL fileURLWithPath:sandBoxFilePath] options:nil];
-        AVAssetExportSession *exportSession=  [[AVAssetExportSession alloc] initWithAsset:asset presetName:AVAssetExportPresetMediumQuality];
+        AVAssetExportSession *exportSession=  [[AVAssetExportSession alloc] initWithAsset:asset presetName:AVAssetExportPresetHighestQuality];
         exportSession.shouldOptimizeForNetworkUse = YES;
         exportSession.outputURL = [NSURL fileURLWithPath:zippath];
         exportSession.outputFileType = AVFileTypeMPEG4;

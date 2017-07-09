@@ -9,6 +9,8 @@
 #import "HBNavigationbar.h" 
 //#import <Masonry/Masonry.h>
 
+const int tag_hbnavigation_title = 4240024;
+
 @interface UIView(navigationbar)
 @property(nonatomic,assign) CGFloat bottom;
 @end
@@ -220,8 +222,9 @@
         [_titleView removeFromSuperview];
          _titleView = titleView;
         _titleView.frame = frame;
+        _titleView.tag = tag_hbnavigation_title;
         [self addSubview:_titleView];
-        [_titleView setAutoresizingMask:UIViewAutoresizingFlexibleWidth] ;
+        [_titleView setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
     }
 }
 -(UIColor *)TintColor{
@@ -234,9 +237,17 @@
 -(void)setTintColor:(UIColor *)tintColor
 {
     _TintColor = tintColor;
-    UILabel * lbl = (UILabel *)[self.titleView viewWithTag:4240024];
+    UILabel * lbl = (UILabel *)[self.titleView viewWithTag:tag_hbnavigation_title];
     if (lbl) {
         lbl.textColor = tintColor;
+    }
+}
+
+-(void)setTitleFont:(UIFont *)titleFont{
+    _titleFont = titleFont;
+    UILabel * lbl = (UILabel *)[self.titleView viewWithTag:tag_hbnavigation_title];
+    if (lbl) {
+        lbl.font = titleFont;
     }
 }
 -(void)setTitle:(NSString *)title
@@ -248,11 +259,13 @@
     label.textColor =  self.TintColor;
     label.font = [UIFont boldSystemFontOfSize:18.];;
     label.text = title;
-    label.tag = 4240024;
+    label.tag = tag_hbnavigation_title;
     [self.titleView removeFromSuperview];
     self.titleView = label;
     [self addSubview:self.titleView];
 }
+
+
 -(void)setText:(NSString *)text
 {
     [self setTitle:text];

@@ -17,6 +17,7 @@
 @property(nonatomic,strong) UIControl   * rightItem;
 @property(nonatomic,strong) NSString    * title;
 @property(nonatomic,strong) NSString    * text;
+@property (nonatomic, strong) UIFont * titleFont;
 -(void)drawtoplinelayer;
 -(void)drawbottomlinelayer;
 /**

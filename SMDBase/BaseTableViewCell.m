@@ -53,8 +53,7 @@
     return [htmlstring containsString:@"</span>"];
 }
 -(void)layoutSubviews{
-    [super layoutSubviews];
-    
+    [super layoutSubviews]; 
     CGFloat lineheight = 0.3;
     UIColor * linecolor =  KT_HEXCOLORA(0XEEEEEE, 0.5);
     self.toplayer.backgroundColor = linecolor;
