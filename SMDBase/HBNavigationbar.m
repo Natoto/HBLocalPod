@@ -72,7 +72,7 @@ const int tag_hbnavigation_title = 4240024;
         }
         
         self.leftItem.bottom = self.bottom; //CGPointMake( ITEM_WIDTH/2 + 10,STATUS_HEIGHT + BAR_HEIGHT/2);
-        self.rightItem.center = CGPointMake( [UIScreen mainScreen].bounds.size.width - ITEM_WIDTH/2 - 10 , BAR_HEIGHT/2 + STATUS_HEIGHT);
+        self.rightItem.center = CGPointMake( [UIScreen mainScreen].bounds.size.width - ITEM_WIDTH/2  , BAR_HEIGHT/2 + STATUS_HEIGHT);
         
         if (self.titleView ) {
             self.titleView.frame = CGRectMake(0, 0, 200, BAR_HEIGHT);
@@ -107,7 +107,7 @@ const int tag_hbnavigation_title = 4240024;
     }
     
     navbar.leftItem.center = CGPointMake( ITEM_WIDTH/2 + 10,STATUS_HEIGHT + BAR_HEIGHT/2);
-    navbar.rightItem.center = CGPointMake( [UIScreen mainScreen].bounds.size.width - ITEM_WIDTH/2 - 10 , BAR_HEIGHT/2 + STATUS_HEIGHT);
+    navbar.rightItem.center = CGPointMake( [UIScreen mainScreen].bounds.size.width - ITEM_WIDTH/2 , BAR_HEIGHT/2 + STATUS_HEIGHT);
 
     if (navbar.titleView ) {
         navbar.titleView.frame = CGRectMake(0, 0, 200, BAR_HEIGHT);
@@ -310,7 +310,7 @@ const int tag_hbnavigation_title = 4240024;
 -(UIButton *)setBarButtonItemWithTitle:(NSString *)title image:(UIImage *)image leftbar:(BOOL)left target:(id)target selector:(SEL)selector
 {
     
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    UIButton *button = [UIButton new];
     button.titleLabel.font = [UIFont systemFontOfSize:16.];
     if (!image && title) {
         //button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -342,6 +342,8 @@ const int tag_hbnavigation_title = 4240024;
     {
         button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
         button.frame= _rightItem.frame;
+        button.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 20);
+        button.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 10);
         [_rightItem removeFromSuperview];
         _rightItem = button;
         [self.rightItem setAutoresizingMask:UIViewAutoresizingFlexibleRightMargin|
