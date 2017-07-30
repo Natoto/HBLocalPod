@@ -342,7 +342,7 @@ const int tag_hbnavigation_title = 4240024;
     {
         button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
         button.frame= _rightItem.frame;
-        button.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 20);
+        button.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 10);
         button.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 10);
         [_rightItem removeFromSuperview];
         _rightItem = button;
