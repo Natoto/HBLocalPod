@@ -83,11 +83,13 @@ NO_DEFAULT_PLACEHOLDER
     return self.contentView.bounds.size;//CGSizeMake(80, 80);
 }
 
--(void)setDictionary:(NSMutableDictionary *)dictionary
-{
-    [super setDictionary:dictionary];
-    if (dictionary) {
-    }
+-(void)setcelldictionary:(NSMutableDictionary *)dictionary{
+ 
+//    NSNumber * radis = dictionary[key_soloImageView_radius];
+//    if (radis && [[radis class] isSubclassOfClass:[NSNumber class]]) {
+//        self.imageView.layer.cornerRadius = radis.floatValue;
+//        self.imageView.clipsToBounds = YES;
+//    }
 }
 -(void)setcellProfile:(NSString *)profile
 {

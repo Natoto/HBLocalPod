@@ -11,6 +11,7 @@
  * 存储的值是 NSValue * value = [NSValue valueWithCGSize:CGSizeMake(80, 80)];
  */
 static NSString * key_soloImageView_size = @"key_soloImageView_size";
+static NSString * key_soloImageView_radius = @"key_soloImageView_radius";
 
 @interface SoloImageViewCell : BaseTableViewCell
 
