@@ -54,11 +54,16 @@
 }
 -(void)layoutSubviews{
     [super layoutSubviews]; 
-    CGFloat lineheight = 0.3;
-    UIColor * linecolor =  KT_HEXCOLORA(0XEEEEEE, 0.5);
+//    CGFloat lineheight = 0.3;
+    UIColor * linecolor = [self top_bottom_line_color];
     self.toplayer.backgroundColor = linecolor;
     self.bottomlayer.backgroundColor = linecolor;
     
+}
+
+-(UIColor *)top_bottom_line_color{
+    
+    return  KT_HEXCOLORA(0XEEEEEE, 0.5);
 }
 
 -(void)setcellRightValue:(NSString *)value
