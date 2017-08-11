@@ -136,12 +136,17 @@ static char const key_navigationbar = 't';
 
 -(void)backtoparent:(id)sender andRefresh:(BOOL)refresh
 {
+    [self backtoparent:sender andRefresh:refresh animate:YES];
+}
+
+-(void)backtoparent:(id)sender andRefresh:(BOOL)refresh animate:(BOOL)animate
+{
     if([[self class] isSubclassOfClass:[UIViewController class]])
     {
-        UINavigationController * navigation = (UINavigationController *)self.navigationController;        
-//        UIViewController * ctr = (UIViewController *)self;
+        UINavigationController * navigation = (UINavigationController *)self.navigationController;
+        //        UIViewController * ctr = (UIViewController *)self;
         if (self.navigationController.childViewControllers.count >1 && self.navigationController.topViewController == self) {
-            [navigation popViewControllerAnimated:YES];
+            [navigation popViewControllerAnimated:animate];
             if (refresh) {
                 HBBaseViewController * ctr = (HBBaseViewController *)navigation.topViewController;
                 [ctr refreshView];
@@ -151,7 +156,7 @@ static char const key_navigationbar = 't';
         if (self.presentingViewController) {
             
             UINavigationController * navigation = (UINavigationController *)self.navigationController;
-            [self dismissViewControllerAnimated:YES completion:NULL];
+            [self dismissViewControllerAnimated:animate completion:NULL];
             if (refresh) {
                 HBBaseViewController * ctr = (HBBaseViewController *)navigation.topViewController;
                 [ctr refreshView];

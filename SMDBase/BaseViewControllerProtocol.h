@@ -40,12 +40,8 @@ static NSString * const  notify_NetworkError= @"notify_NetworkError";
 @interface HBBaseViewController(BaseViewControllerProtocol)
 @property(nonatomic,retain) HBNavigationbar * navigationbar;
 @property(nonatomic,retain) HBNavigationbar * navigationtoolsbar;
-
-//-(HBNavigationbar *)navigationbar;
-//-(void)setNavigationbar:(HBNavigationbar *)navigationbar;
-//-(HBNavigationbar *)navigationtoolsbar;
-//-(void)setNavigationtoolsbar:(HBNavigationbar *)navigationtoolsbar;
-
+ 
+-(void)backtoparent:(id)sender andRefresh:(BOOL)refresh animate:(BOOL)animate;
 -(void)backtoparent:(id)sender andRefresh:(BOOL)refresh;
 -(void)FinishedLoadData;
 -(void)refreshView;
