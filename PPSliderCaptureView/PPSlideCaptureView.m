@@ -286,16 +286,6 @@
     return _filter2View;
 }
 
-//-(GPUImageVideoCamera *)camera{
-//    if (!_camera) {
-//        GPUImageVideoCamera * camera = [[GPUImageVideoCamera alloc] initWithSessionPreset:AVCaptureSessionPreset1280x720 cameraPosition:AVCaptureDevicePositionBack];
-//        camera.outputImageOrientation = UIInterfaceOrientationPortrait;
-//        camera.horizontallyMirrorFrontFacingCamera = NO;
-//        camera.horizontallyMirrorRearFacingCamera = NO;
-//        _camera = camera;
-//    }
-//    return _camera;
-//}
 
 
 - (GPUImageStillCamera *)stillCamera;
@@ -314,14 +304,5 @@
     return _stillCamera;
 }
 
-//-(GPUImageView *)pictureImageView{
-//    if (!_pictureImageView) {
-//         GPUImageView *imgView=[[GPUImageView alloc] initWithFrame:CGRectMake(0, 64, 100, 100)];
-//        [self addSubview:imgView];//将显示view加入父类
-//        [self bringSubviewToFront:imgView];
-//        _pictureImageView = imgView;
-//    }
-//    return _pictureImageView;
-//}
 
 @end
