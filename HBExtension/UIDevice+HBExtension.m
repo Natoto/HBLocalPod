@@ -8,6 +8,7 @@
 
 #import "UIDevice+HBExtension.h"
 #import <sys/utsname.h>
+#import <stdlib.h>
 @implementation UIDevice(HBExtension)
 + (BOOL)isScreenSize:(CGSize)size
 {
@@ -68,10 +69,10 @@ static const char * __isjb_app = NULL;
     }
     
     // method 3
-    if ( 0 == system("ls") )
-    {
-        return YES;
-    }
+//    if ( 0 == system("ls") )
+//    {
+//        return YES;
+//    }
 #endif	// #if (TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR)
     
     return NO;
@@ -160,6 +161,22 @@ static const char * __isjb_app = NULL;
 #else	// #if (TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR)
     return NO;
 #endif	// #if (TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR)
+}
+
++ (BOOL)isPhoneX
+{
+#if (TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR)
+    if ( [self isDevicePad] )
+    {
+        return NO;
+    }
+    else
+    {
+        return [UIDevice isScreenSize:CGSizeMake(375*3, 812*3)];
+    }
+#else
+    return NO;
+#endif
 }
 
 

@@ -28,6 +28,7 @@
 #define IS_IPHONE_6         (IS_IPHONE && SCREEN_MAX_LENGTH == 667.0)
 #define IS_IPHONE_6P        (IS_IPHONE && SCREEN_MAX_LENGTH == 736.0)
 
+#define IOS11_OR_LATER        ( [[[UIDevice currentDevice] systemVersion] floatValue]>= 11.0 )
 #define IOS10_OR_LATER		( [[[UIDevice currentDevice] systemVersion] floatValue]>= 10.0 )
 #define IOS9_OR_LATER		( [[[UIDevice currentDevice] systemVersion] floatValue]>= 9.0 )
 #define IOS8_OR_LATER		(  [[[UIDevice currentDevice] systemVersion] floatValue]>= 8.0 )
@@ -38,6 +39,7 @@
 #define IOS3_OR_LATER		( [[[UIDevice currentDevice] systemVersion] floatValue]>= 3.0 )
 
 
+#define IOS10_OR_EARLIER        ( !IOS11_OR_LATER )
 #define IOS9_OR_EARLIER		( !IOS10_OR_LATER )
 #define IOS8_OR_EARLIER		( !IOS9_OR_LATER )
 #define IOS7_OR_EARLIER		( !IOS8_OR_LATER )
@@ -71,6 +73,8 @@
 
 
 @interface UIDevice(HBExtension)
+
++ (BOOL)isPhoneX;
 
 + (NSString*)deviceVersion;
 @end
