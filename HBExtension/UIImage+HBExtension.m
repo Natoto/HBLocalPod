@@ -728,6 +728,30 @@ CGFloat IMGROTATE_HBDegreesToRadians(CGFloat degrees) {return degrees * M_PI / 1
     return scaledImage;
 }
 
++ (UIImage *) flipImageHorizontally:(UIImage *)image
+{
+    UIImageOrientation flippedOrientation = UIImageOrientationUpMirrored;
+    switch (image.imageOrientation) {
+        case UIImageOrientationDown:
+            flippedOrientation = UIImageOrientationDownMirrored;
+            break;
+        case UIImageOrientationLeft:
+            flippedOrientation = UIImageOrientationLeftMirrored;
+            break;
+        case UIImageOrientationRight:
+            flippedOrientation = UIImageOrientationRightMirrored;
+            break;
+        case UIImageOrientationUp:
+            flippedOrientation = UIImageOrientationUpMirrored;
+            break;
+            // ...
+        default:
+            break;
+    }
+    UIImage * flippedImage = [UIImage imageWithCGImage:image.CGImage scale:image.scale orientation:flippedOrientation];
+    return flippedImage;
+}
+
 - (UIImage *)fixOrientation
 {
     // No-op if the orientation is already correct

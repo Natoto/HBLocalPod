@@ -33,7 +33,8 @@
 - (UIImage *)cropToSquare;
 - (UIImage *)cropToRatio:(CGFloat)ratio;//按比例裁剪 不变形处理
 - (UIImage *)imageInRect:(CGRect)rect;
-
+/** * 翻转图片 */
++ (UIImage *) flipImageHorizontally:(UIImage *)originalImage;
 + (UIImage *)imageFromString:(NSString *)name;
 + (UIImage *)imageFromString:(NSString *)name atPath:(NSString *)path;
 + (UIImage *)imageFromString:(NSString *)name stretched:(UIEdgeInsets)capInsets;
