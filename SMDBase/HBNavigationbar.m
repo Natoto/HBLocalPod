@@ -49,6 +49,37 @@ const int tag_hbnavigation_title = 4240024;
 @synthesize titleView = _titleView;
 @synthesize TintColor = _TintColor;
 
+
+
++(CGFloat)STATUS_HEIGHT{
+ 
+#ifdef __IPHONE_11_0
+    if ([HBNavigationbar isPhoneX]) {
+        return 44;
+    }
+   return  20;
+#else
+    return  20;
+#endif
+    
+}
++(CGFloat)defaultheight{
+    return [HBNavigationbar STATUS_HEIGHT] + 44.;
+}
+
++ (BOOL)isPhoneX
+{
+    static BOOL isphonex = NO;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        #if (TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR)
+                isphonex = [HBNavigationbar isScreenSize:CGSizeMake(375*3, 812*3)];
+        #else
+                iphonex = NO;
+        #endif
+    });
+}
+
 -(id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -61,7 +92,8 @@ const int tag_hbnavigation_title = 4240024;
         
         CGFloat BAR_HEIGHT = 44;
         CGFloat ITEM_WIDTH = 100;
-        CGFloat STATUS_HEIGHT = 20;
+        CGFloat STATUS_HEIGHT =  [[self class] STATUS_HEIGHT];
+        
         [self drawbottomlinelayer];
         [self leftItem];
         if (self.leftItem) {
@@ -85,8 +117,9 @@ const int tag_hbnavigation_title = 4240024;
 +(HBNavigationbar *)navigationbar
 {
     CGFloat BAR_HEIGHT = 44;
-    CGFloat STATUS_HEIGHT = 20;
-    HBNavigationbar * navbar = [[HBNavigationbar alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, BAR_HEIGHT + STATUS_HEIGHT)];
+//    CGFloat STATUS_HEIGHT = 20;
+    
+    HBNavigationbar * navbar = [[HBNavigationbar alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, BAR_HEIGHT +  [self class].STATUS_HEIGHT)];
     return navbar;
 }
 
@@ -106,7 +139,7 @@ const int tag_hbnavigation_title = 4240024;
         navbar.rightItem.frame = CGRectMake([UIScreen mainScreen].bounds.size.width - 50 , 0, ITEM_WIDTH, BAR_HEIGHT);
     }
     
-    navbar.leftItem.center = CGPointMake( ITEM_WIDTH/2 + 10,STATUS_HEIGHT + BAR_HEIGHT/2);
+    navbar.leftItem.center = CGPointMake( ITEM_WIDTH/2 + 10,STATUS_HEIGHT - BAR_HEIGHT/2);
     navbar.rightItem.center = CGPointMake( [UIScreen mainScreen].bounds.size.width - ITEM_WIDTH/2 , BAR_HEIGHT/2 + STATUS_HEIGHT);
 
     if (navbar.titleView ) {
@@ -358,5 +391,24 @@ const int tag_hbnavigation_title = 4240024;
    return [self setBarButtonItemWithTitle:nil image:image leftbar:left target:target selector:selector];
 }
 
- 
+
++ (BOOL)isScreenSize:(CGSize)size
+{
+#if (TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR)
+    if ( [UIScreen instancesRespondToSelector:@selector(currentMode)] )
+    {
+        CGSize size2 = CGSizeMake( size.height, size.width );
+        CGSize screenSize = [UIScreen mainScreen].currentMode.size;
+        
+        if ( CGSizeEqualToSize(size, screenSize) || CGSizeEqualToSize(size2, screenSize) )
+        {
+            return YES;
+        }
+    }
+    
+    return NO;
+#else    // #if (TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR)
+    return NO;
+#endif    // #if (TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR)
+}
 @end

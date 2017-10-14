@@ -149,7 +149,14 @@
     
     [self setExtraCellLineHidden:self.tableView];
     [self.view sendSubviewToBack:self.tableView];
+    
+#ifdef __IPHONE_11_0
+    if(@available(iOS 11.0, *)){
+        self.tableView.contentInset = UIEdgeInsetsMake(44, 0, 0, 0);
+    }
+#else
     self.tableView.contentInset = UIEdgeInsetsMake(64, 0, 0, 0);
+#endif
     if (self.navigationController.childViewControllers.count > 1 && self.navigationController.topViewController == self) {
         self.showBackItem = YES;
     }

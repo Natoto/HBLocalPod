@@ -83,6 +83,7 @@ static char const key_navigationbar = 't';
     if (!toolsbar) {
         toolsbar = [HBNavigationbar navigationtoolbar];
         [self.view addSubview:toolsbar];
+        
         [toolsbar mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.bottom.right.equalTo(self.view).offset(0);
             make.height.equalTo(@44);
@@ -110,10 +111,19 @@ static char const key_navigationbar = 't';
             navbar.backgroundColor =  [UIColor whiteColor];//[UIColor blackColor];
             [self.view addSubview:navbar];
             self.view.autoresizesSubviews = YES;
+ 
+#ifdef __IPHONE_11_0
+            CGFloat height = [HBNavigationbar defaultheight];
+            [navbar mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.top.left.right.equalTo(self.view).offset(0);
+                make.height.equalTo(@(height));
+            }];
+#else
             [navbar mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.top.left.right.equalTo(self.view).offset(0);
                 make.height.equalTo(@64);
             }];
+#endif
             [navbar drawbottomlinelayer];
             navbar.TintColor =  [UIColor colorWithRed:51./255. green:51./255. blue:51./255. alpha:1];
             //[UIColor blackColor];
