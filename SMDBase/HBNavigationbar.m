@@ -73,11 +73,14 @@ const int tag_hbnavigation_title = 4240024;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         #if (TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR)
-                isphonex = [HBNavigationbar isScreenSize:CGSizeMake(375*3, 812*3)];
+            isphonex = [HBNavigationbar isScreenSize:CGSizeMake(375*3, 812*3)];
+            NSLog(@"is iphone X");
         #else
-                iphonex = NO;
+            iphonex = NO;
+            NSLog(@"is not  iphone X");
         #endif
     });
+    return isphonex;
 }
 
 -(id)initWithFrame:(CGRect)frame
