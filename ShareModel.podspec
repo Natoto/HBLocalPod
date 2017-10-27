@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "ShareModel"
-  s.version      = "0.0.4"
+  s.version      = "1.0.1"
   s.summary      = "ManageLocalCode desc" 
   s.homepage     = "https://github.com/natoto/HBLocalPod"  
   s.author       = { "summer-liu" => "787038442@qq.com" } 

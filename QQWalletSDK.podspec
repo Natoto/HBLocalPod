@@ -2,7 +2,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "QQWalletSDK"
-  s.version      = "0.0.1"
+  s.version      = "1.0.1"
   s.summary      = "QQWalletSDK desc"  
   s.homepage     = "" 
   s.homepage     = "https://github.com/natoto"  

@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "NetworkEye"
-  s.version      = "1.0.6"
+  s.version      = "1.0.1"
   s.summary      = "NetworkEye - a iOS network debug library ,It can monitor HTTP requests within the App and displays information related to the request."
   s.homepage     = "https://github.com/coderyi/NetworkEye"
   s.license      = "MIT"

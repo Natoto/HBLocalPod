@@ -85,6 +85,7 @@ NO_DEFAULT_PLACEHOLDER
 
 -(void)setcelldictionary:(NSMutableDictionary *)dictionary{
  
+    [super setcelldictionary:dictionary];
 //    NSNumber * radis = dictionary[key_soloImageView_radius];
 //    if (radis && [[radis class] isSubclassOfClass:[NSNumber class]]) {
 //        self.imageView.layer.cornerRadius = radis.floatValue;

@@ -15,6 +15,8 @@
 //#import "HiidoSdkModel.h"
 
 #import "HBDirWatchdog.h"
+#import "UIDevice+HBExtension.h"
+
 
 #ifndef	weakify
 #if __has_feature(objc_arc)
@@ -150,13 +152,13 @@
     [self setExtraCellLineHidden:self.tableView];
     [self.view sendSubviewToBack:self.tableView];
     
-#ifdef __IPHONE_11_0
-    if(@available(iOS 11.0, *)){
+    if(IOS11_OR_LATER){
         self.tableView.contentInset = UIEdgeInsetsMake(44, 0, 0, 0);
     }
-#else
-    self.tableView.contentInset = UIEdgeInsetsMake(64, 0, 0, 0);
-#endif
+    else{
+        self.tableView.contentInset = UIEdgeInsetsMake(64, 0, 0, 0);
+    }
+    
     if (self.navigationController.childViewControllers.count > 1 && self.navigationController.topViewController == self) {
         self.showBackItem = YES;
     }

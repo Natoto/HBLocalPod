@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "JSPatch"
-  s.version      = "0.0.1"
+  s.version      = "1.0.1"
   s.summary      = "JSPatch desc" 
   s.homepage     = "https://github.com/natoto/HBLocalPod"  
   s.author       = { "summer-liu" => "787038442@qq.com" } 

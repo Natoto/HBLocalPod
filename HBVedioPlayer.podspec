@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name         = 'HBVedioPlayer'
-    s.version      = '0.1.1'
+    s.version      = '1.0.1'
     s.summary      = 'A good player made by renzifeng'
     s.homepage     = "https://github.com/natoto/HBLocalPod"  
     s.license      = 'MIT'
