@@ -31,7 +31,7 @@
     self.imageCompletion = completion;
     [self _didStart];
 
-    UIImageWriteToSavedPhotosAlbum(image, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
+    UIImageWriteToSavedPhotosAlbum(image, self, @selector(image:didFinishSavingWithError:contextInfo:), nil); 
 }
 
 #pragma mark - Save completions

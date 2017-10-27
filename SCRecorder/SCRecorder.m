@@ -1056,10 +1056,20 @@ static char* SCRecorderPhotoOptionsContext = "PhotoOptionsContext";
 }
 
 - (void)switchCaptureDevices {
+   
+    
     if (self.device == AVCaptureDevicePositionBack) {
-        self.device = AVCaptureDevicePositionFront;
+        if([UIImagePickerController isCameraDeviceAvailable:UIImagePickerControllerCameraDeviceFront])
+        {
+            //前置摄像头可用
+            self.device = AVCaptureDevicePositionFront;
+        }
     } else {
-        self.device = AVCaptureDevicePositionBack;
+        if([UIImagePickerController isCameraDeviceAvailable:UIImagePickerControllerCameraDeviceRear])
+        {
+            //后置摄像头可用
+            self.device = AVCaptureDevicePositionBack;
+        }
     }
 }
 
@@ -1604,7 +1614,7 @@ static char* SCRecorderPhotoOptionsContext = "PhotoOptionsContext";
 
 - (void)setVideoZoomFactor:(CGFloat)videoZoomFactor {
     AVCaptureDevice *device = [self videoDevice];
-    
+ 
     if ([device respondsToSelector:@selector(videoZoomFactor)]) {
         NSError *error;
         if ([device lockForConfiguration:&error]) {

@@ -9,7 +9,6 @@
 #import "SCImageView.h"
 #import "SCSampleBufferHolder.h"
 #import "SCContext.h"
-
 #if TARGET_IPHONE_SIMULATOR
 @interface SCImageView()<GLKViewDelegate>
 
@@ -251,6 +250,59 @@
     [self setNeedsDisplay];
 }
 
++ (CGAffineTransform)preferredCIImageTransformFromMirrorUIImage:(UIImage *)image {
+    if (image.imageOrientation == UIImageOrientationUp) {
+        return CGAffineTransformIdentity;
+    }
+    CGAffineTransform transform = CGAffineTransformIdentity;
+   
+    image = [SCImageView flipImageHorizontally:image];
+    switch (image.imageOrientation) {
+        case UIImageOrientationDown:
+        case UIImageOrientationDownMirrored:
+            transform = CGAffineTransformTranslate(transform, image.size.width, image.size.height);
+            transform = CGAffineTransformRotate(transform, M_PI);
+            break;
+            
+        case UIImageOrientationLeft:
+        case UIImageOrientationLeftMirrored:
+            transform = CGAffineTransformTranslate(transform, image.size.width, 0);
+            transform = CGAffineTransformRotate(transform, -M_PI_2);
+            break;
+            
+        case UIImageOrientationRight:
+        case UIImageOrientationRightMirrored:
+            transform = CGAffineTransformTranslate(transform, 0, image.size.height);
+            transform = CGAffineTransformRotate(transform, M_PI_2);
+            break;
+        case UIImageOrientationUp:
+        case UIImageOrientationUpMirrored:
+            break;
+    }
+    
+    switch (image.imageOrientation) {
+        case UIImageOrientationUpMirrored:
+        case UIImageOrientationDownMirrored:
+            transform = CGAffineTransformTranslate(transform, image.size.width, 0);
+            transform = CGAffineTransformScale(transform, -1, 1);
+            break;
+            
+        case UIImageOrientationLeftMirrored:
+        case UIImageOrientationRightMirrored:
+            transform = CGAffineTransformTranslate(transform, image.size.height, 0);
+            transform = CGAffineTransformScale(transform, -1, 1);
+            break;
+        case UIImageOrientationUp:
+        case UIImageOrientationDown:
+        case UIImageOrientationLeft:
+        case UIImageOrientationRight:
+            break;
+    }
+    
+    return transform;
+}
+
+//
 + (CGAffineTransform)preferredCIImageTransformFromUIImage:(UIImage *)image {
     if (image.imageOrientation == UIImageOrientationUp) {
         return CGAffineTransformIdentity;
@@ -306,7 +358,12 @@
     if (image == nil) {
         self.CIImage = nil;
     } else {
-        self.preferredCIImageTransform = [SCImageView preferredCIImageTransformFromUIImage:image];
+        if (self.keepMirror) {
+              self.preferredCIImageTransform = [SCImageView preferredCIImageTransformFromMirrorUIImage:image];
+        }
+        else{
+            self.preferredCIImageTransform = [SCImageView preferredCIImageTransformFromUIImage:image];
+        }
         self.CIImage = [CIImage imageWithCGImage:image.CGImage];
     }
 }
@@ -380,4 +437,29 @@ static CGRect CGRectMultiply(CGRect rect, CGFloat contentScale) {
 }
 #endif
 
++ (UIImage *) flipImageHorizontally:(UIImage *)image
+{
+    UIImageOrientation flippedOrientation = UIImageOrientationUpMirrored;
+    switch (image.imageOrientation) {
+        case UIImageOrientationDown:
+            flippedOrientation = UIImageOrientationDownMirrored;
+            break;
+        case UIImageOrientationLeft:
+            flippedOrientation = UIImageOrientationLeftMirrored;
+            break;
+        case UIImageOrientationRight:
+            flippedOrientation = UIImageOrientationRightMirrored;
+            break;
+        case UIImageOrientationUp:
+            flippedOrientation = UIImageOrientationUpMirrored;
+            break;
+            // ...
+        default:
+            break;
+    }
+    UIImage * flippedImage = [UIImage imageWithCGImage:image.CGImage scale:image.scale orientation:flippedOrientation];
+    return flippedImage;
+}
 @end
+
+

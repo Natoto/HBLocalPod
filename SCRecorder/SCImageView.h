@@ -53,7 +53,7 @@
  Default is YES.
  */
 @property (assign, nonatomic) BOOL scaleAndResizeCIImageAutomatically;
-
+@property (nonatomic, assign) BOOL keepMirror; //镜面显示
 /**
  Set the CIImage using a sampleBuffer. The CIImage will be automatically generated
  when needed. This avoids creating multiple CIImage if the SCImageView can't render them

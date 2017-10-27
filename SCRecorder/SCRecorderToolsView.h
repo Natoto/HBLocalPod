@@ -24,6 +24,7 @@
 
 - (void)recorderToolsView:(SCRecorderToolsView *__nonnull)recorderToolsView didTapToFocusWithGestureRecognizer:(UIGestureRecognizer *__nonnull)gestureRecognizer;
 
+- (void)recorderToolsView:(SCRecorderToolsView *__nonnull)recorderToolsView didDoubleTapToFocusWithGestureRecognizer:(UIGestureRecognizer *__nonnull)gestureRecognizer;
 @end
 
 @interface SCRecorderToolsView : UIView
