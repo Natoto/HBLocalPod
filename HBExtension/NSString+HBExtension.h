@@ -1,5 +1,7 @@
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+
 #define STRING_(OBJ) [NSString stringWithFormat:@"%@",OBJ?OBJ:@""]
 #define STRING_FORMAT_(FORMAT,...) [NSString stringWithFormat:FORMAT,__VA_ARGS__]
 
