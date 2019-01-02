@@ -2,19 +2,23 @@
 //  BaseCollectionViewCell.m
 //  PENG
 //
-//  Created by 星盛 on 15/10/20.
+//  Created by BOOB on 15/10/20.
 //  Copyright © 2015年 YY.COM All rights reserved.
 //
 
 #import "HBBaseCollectionViewCell.h"
-#import "CELL_STRUCT_Common.h"
-#import "CELL_STRUCT_KEY.h"
+#import "HBCellStruct.h"
+#import "HBCellStruct_KEY.h"
 #import "UIButton+HBKit.h"
+#import "HBCellStruct_Common.h" 
+
 @interface HBBaseCollectionViewCell()
 @property (weak, nonatomic) IBOutlet UIButton *btn_title;
 
 @end
 @implementation HBBaseCollectionViewCell
+
+
 -(void)setcelldictionary:(NSMutableDictionary *)dictionary{
     _dictionary = dictionary;
     UIColor * bgcolor = [dictionary objectForKey:key_cellstruct_background];
@@ -55,7 +59,7 @@
     }
 }
 
--(void)setcellProfile:(NSString *)profile{
+-(void)setcellPicture:(NSString *)profile{
     if (profile) {
         [self.btn_title setImage:[UIImage imageNamed:profile] forState:UIControlStateNormal];
     }
@@ -81,5 +85,5 @@
 -(void)setcellobject2:(id)object{}
 -(void)setcelldelegate:(id)delegate{self.delegate = delegate;}
 -(void)setcelldetailtitle:(NSString *)detail{}
--(void)setcellValue:(NSString *)value{}
+-(void)setcellValue:(NSString *)value{} 
 @end

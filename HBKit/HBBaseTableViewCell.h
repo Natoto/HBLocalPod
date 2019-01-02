@@ -16,17 +16,17 @@
 __MOTHOD\
 @end
 
-#define NO_DEFAULT_TITLE_PROFILE -(void)setcellProfile:(NSString *)profile{}
+#define NO_DEFAULT_TITLE_PROFILE -(void)setcellPicture:(NSString *)profile{}
 #define NO_DEFAULT_TITLE -(void)setcellTitle:(NSString *)title{}
 #define NO_DEFAULT_PLACEHOLDER  -(void)setcelldetailtitle:(NSString *)detailtitle{}
 
 #define HBLOG(SS) NSLog(@"%@",SS);
 
 #import <UIKit/UIKit.h>
-#import "CELL_STRUCT_KEY.h"
-#import "HBBaseProtocol.h"
+#import "HBCellStruct_KEY.h"
+#import "HBBaseCellProtocol.h"
 
-@interface HBBaseTableViewCell : UITableViewCell<HBBaseProtocol>
+@interface HBBaseTableViewCell : UITableViewCell<HBBaseCellProtocol>
  
 @property (nonatomic,assign ) BOOL showNewMsg;
 @property (nonatomic,assign ) BOOL showTopLine;

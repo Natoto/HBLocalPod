@@ -22,7 +22,7 @@
 		<real>44</real>
 		<key>accessory</key>
 		<true/>
-		<key>CellStyleValue</key>
+		<key>cellStyleValue</key>
 		<integer>1</integer>
 		<key>showBottomLine</key>
 		<false/>
@@ -56,7 +56,7 @@
 		<string></string>
 		<key>subvalue2</key>
 		<string></string>
-		<key>xibvalue</key>
+		<key>isXib</key>
 		<string></string>
 		<key>attributeTitle</key>
 		<string></string>

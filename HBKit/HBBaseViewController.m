@@ -7,32 +7,25 @@
 //
 #import "HBBaseViewController.h"
 #import "UIButton+HBKit.h"
-#import "CELL_STRUCT_Common.h"
-#import "HBKitDataModel.h"
-
+#import "HBCellStruct.h"
+#import "HBKitDataModel.h" 
+#import "HBCellStruct_Common.h"
 
 #define HB_UIColorWithRGB(r, g, b) [UIColor colorWithRed:r/255.0 green:g/255.0 blue:b/255.0 alpha:1]
 
 
 @implementation BackGroundView
--(void)setImage:(UIImage *)image
-{
-    _image = image;
-    [self setNeedsDisplay];
-}
-- (void)drawRect:(CGRect)rect {
-    
-    [super drawRect:rect];
-    [self.image drawInRect:CGRectMake(0, -10, rect.size.width, rect.size.height + 10)];
-    // Drawing code
-}
 @end
 
 @interface HBBaseViewController ()
 @property (nonatomic, strong) HBKitDataModel * datamodel;
 @end
 
+
 @implementation HBBaseViewController
+
+-(void)otherConfigCellStruct:(HBCellStruct *)cs{
+}
 
 -(HBKitDataModel *)datamodel{
     if (!_datamodel) {
@@ -45,6 +38,7 @@
 }
 
 -(void)configcellstructs{};
+
 -(NSMutableDictionary *)dataDictionary
 {
     return  self.datamodel.dataDictionary;
@@ -60,8 +54,9 @@
 
 -(void)loadplistConfig:(NSString *)plistname filepath:(NSString *)filepath
 {
+    __weak typeof(self) weakself = self;
     [self.datamodel loadplistConfig:plistname filepath:filepath  configViewblock:^(NSMutableDictionary *dic) {
-         [self loadplistviewConfig:dic];
+         [weakself loadplistviewConfig:dic];
     }];
 }
 
@@ -82,7 +77,7 @@
 /**
  *  从json文件中配置信息
  *
- *  @param jsonfilepath  json文件存放的路径名
+ *  @param jsonfilename  json文件存放的路径名
  */
 
 -(void)loadjsonfileConfig:(NSString *)jsonfilename{
@@ -128,25 +123,31 @@
 
 -(void)setShowBackItem:(BOOL)showBackItem
 {
-    _showBackItem = showBackItem; 
+    _showBackItem = showBackItem;
+    if (_showBackItem) {
+        UIBarButtonItem * item = [[UIBarButtonItem alloc] initWithTitle:@"返回" style:UIBarButtonItemStylePlain target:self action:@selector(backtoparent:)];
+        self.navigationItem.leftBarButtonItem = item;
+    }
+    else{
+        self.navigationItem.leftBarButtonItem = nil;
+    }
 }
 
 -(void)dealloc
 {
-    NSLog(@"%s",__func__);
+    NSLog(@"%@ dealloc",NSStringFromClass([self class]));
 }
 -(void)viewDidLoad
 {
-    [super viewDidLoad]; //默认两行
+    [super viewDidLoad];
     self.view.backgroundColor = [UIColor colorWithRed:239./255. green:239./255. blue:239./255. alpha:1];
+    [self viewOtherConfig];
 }
 
--(IBAction)hbNavigationbartitleTap:(id)sender
-{
+-(void)viewOtherConfig{
     
 }
-
-
+ 
 -(void)setStatusBarStyleDefault:(BOOL)statusBarStyleDefault
 {
     _statusBarStyleDefault = statusBarStyleDefault;
@@ -213,7 +214,7 @@
     [self.view sendSubviewToBack:imageview];
 }
 
--(void)changeBackGroundWithBackimg:(NSString *)imgname ofType:(NSString *)type
+-(void)changeBackGroundWithBackImgName:(NSString *)imgname ofType:(NSString *)type
 {
     NSString *imagePath = [[NSBundle mainBundle] pathForResource:imgname ofType:type];
     UIImage *img = [UIImage imageWithContentsOfFile:imagePath];
@@ -227,9 +228,9 @@
     imageview.frame = CGRectMake(0, -20, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height + 20);
     [self.view sendSubviewToBack:imageview];
 }
--(void)changeBackGroundWithBackimg:(NSString *)imgname
+-(void)changeBackGroundWithBackImgName:(NSString *)imgname
 {
-    [self changeBackGroundWithBackimg:imgname ofType:@"png"];
+    [self changeBackGroundWithBackImgName:imgname ofType:@"png"];
 }
 
 
@@ -245,19 +246,31 @@
     {
         self.navigationItem.leftBarButtonItem = nil;
     }
-    //TODO:设置返回键
-    //    [self.navigationbar setleftBarButtonItemWithImage:[UIImage imageNamed:@"white_back_btn"] target:self selector:@selector(backtoparent:)];
+}
+
+
+-(IBAction)backtoparent:(id)sender animate:(BOOL)animate
+{
+    if (self.navigationController.childViewControllers.count >1 && self.navigationController.topViewController == self) {
+        [self.navigationController popViewControllerAnimated:animate];
+        return;
+    }
+    
+    UIViewController *vc = self;
+    
+    while (vc.presentingViewController) {
+        vc = vc.presentingViewController;
+    }
+    
+    if (vc) {
+        [self dismissViewControllerAnimated:animate completion:NULL];
+    }
+    
 }
 
 -(IBAction)backtoparent:(id)sender
 {
-    if (self.navigationController.childViewControllers.count >1 && self.navigationController.topViewController == self) {
-        [self.navigationController popViewControllerAnimated:YES];
-        return;
-    }
-    if (self.presentingViewController) {
-        [self dismissViewControllerAnimated:YES completion:NULL];
-    }
+    [self backtoparent:sender animate:YES];
 }
 
 #pragma mark 点击手势

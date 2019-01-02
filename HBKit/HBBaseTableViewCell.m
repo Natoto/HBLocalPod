@@ -5,9 +5,9 @@
 //  Created by nonato on 14-11-25.
 //  Copyright (c) 2014年 YY.COM All rights reserved.
 //
-#import "CELL_STRUCT_KEY.h"
+#import "HBCellStruct_KEY.h"
 #import "HBBaseTableViewCell.h"
-#import "CELL_STRUCT_Common.h"
+#import "HBCellStruct_Common.h"
 #import <objc/runtime.h>
 
 @interface HBCirclePoint : UIView
@@ -31,9 +31,8 @@
 
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier plistdic:(NSDictionary *)plistdic{
-    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-    if (self) {
-        [self firstconfigcell:plistdic];
+    self = [self initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (self) { 
     }
     return self;
 }
@@ -123,15 +122,14 @@
     
     if (self.showTopLine) {
         [self drawToplinelayer];
-        
         NSString * toplayerinset = self.dictionary[key_cellstruct_toplayerinsets];
         if (toplayerinset) {
             UIEdgeInsets  insets  = UIEdgeInsetsFromString(toplayerinset);
-            CGRect  layerframe = CGRectMake(insets.left, insets.top, [UIScreen mainScreen].bounds.size.width - insets.left - insets.right, 0.5);
+            CGRect  layerframe = CGRectMake(insets.left, insets.top, self.bounds.size.width - insets.left - insets.right, 0.5);
            self.toplayer.frame = layerframe;
         }
         else{
-            CGRect  layerframe = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0.5);
+            CGRect  layerframe = CGRectMake(0, 0, self.bounds.size.width, 0.5);
             self.toplayer.frame = layerframe;
         }
      }
@@ -139,24 +137,25 @@
     {
         [self clearTopLayer];
     }
+    
     if (self.showBottomLine) {
         [self drawBottomlinelayer];
-        NSString * toplayerinset = self.dictionary[key_cellstruct_toplayerinsets];
+        NSString * toplayerinset = self.dictionary[key_cellstruct_bottomlayerinsets];
         if (toplayerinset) {
             UIEdgeInsets  insets  = UIEdgeInsetsFromString(toplayerinset);
-            CGRect  layerframe = CGRectMake(insets.left,  self.frame.size.height - insets.bottom, [UIScreen mainScreen].bounds.size.width - insets.left - insets.right, 0.5);
+            CGRect  layerframe = CGRectMake(insets.left,  self.frame.size.height - insets.bottom - 0.5, [UIScreen mainScreen].bounds.size.width - insets.left - insets.right, 0.5);
             self.bottomlayer.frame = layerframe;
         }
-        else{
+        else
+        {
             CGRect  layerframe = CGRectMake(0, self.frame.size.height - 0.5, [UIScreen mainScreen].bounds.size.width, 0.5);
             self.bottomlayer.frame = layerframe;
         }
+        
     }else
     {
         [self clearBottomLayer];
     }
-    
-    
     self.redPoint.center = CGPointMake(self.contentView.frame.size.width - 20, self.contentView.frame.size.height/2);
 }
 
@@ -202,6 +201,11 @@
         self.contentView.backgroundColor = [CELL_STRUCT colorWithStructKey:bgcolorstring];
         self.backgroundColor = self.contentView.backgroundColor;
     }
+    NSString * titltfontname = dictionary[key_cellstruct_titleFontFamily];
+    if (titltfontname.length && [[titltfontname class] isSubclassOfClass:[NSString class]]) {
+        self.textLabel.font = [UIFont fontWithName:titltfontname size:self.textLabel.font.pointSize];
+    }
+    
     NSString * detailvalue = [dictionary objectForKey:key_cellstruct_detailvalue];
     OBJ_NULL_DEFAULT(detailvalue, @"")
     NSNumber * imageCornerRadius = DIC_OBJ_KEY(dictionary, key_cellstruct_detailvalue);
@@ -218,7 +222,7 @@
 -(void)setcellTitleFontsize:(NSNumber *)titleFontsize
 {
     if (titleFontsize.floatValue > 8) {
-        self.textLabel.font = [UIFont systemFontOfSize:titleFontsize.floatValue];
+        self.textLabel.font = [UIFont fontWithName:self.textLabel.font.fontName size:titleFontsize.floatValue];
     }
 }
 
@@ -242,7 +246,7 @@
 -(void)setcelldelegate:(id)delegate{}
 
 
--(void)setcellProfile:(NSString *)profile
+-(void)setcellPicture:(NSString *)profile
 {
     if ([profile hasPrefix:@"http://"] || [profile hasPrefix:@"https://"]) {//如果是网络图片 就加载网络图片
 //        [self.imageView hb_setImageWithURL:[NSURL URLWithString:profile] placeholderImage:[UIImage imageFileNamed:@"big_icon"] options:0 completed:nil];
@@ -362,14 +366,19 @@
     UIView *imageLayer = self.bottomlayer;
     CGRect layerframe =  CGRectMake(0, self.frame.size.height - 0.5, [UIScreen mainScreen].bounds.size.width, 0.5);
     if (!imageLayer) {
-        imageLayer =  [self createLayer:layerframe color:PENG_COLOR_LINE];
+        imageLayer =  [self createLayer:layerframe color:self.top_bottom_line_color];
         [self addSubview:imageLayer];
         self.bottomlayer = imageLayer;
     }else
     {
         imageLayer.frame = layerframe;
     }
+    [self bringSubviewToFront:imageLayer];
     imageLayer.hidden = NO;
+}
+
+-(UIColor *)top_bottom_line_color{
+    return PENG_COLOR_LINE;
 }
 
 -(void)drawToplinelayer
@@ -377,13 +386,14 @@
     UIView *imageLayer = self.toplayer;
     CGRect  layerframe = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0.5);
     if (!imageLayer) {
-        imageLayer =  [self createLayer:layerframe color:PENG_COLOR_LINE];
+        imageLayer =  [self createLayer:layerframe color:self.top_bottom_line_color];
         [self addSubview:imageLayer];
         self.toplayer = imageLayer;
     }else
     {
         imageLayer.frame = layerframe;
     }
+    [self bringSubviewToFront:imageLayer];
     imageLayer.hidden = NO;
 }
 

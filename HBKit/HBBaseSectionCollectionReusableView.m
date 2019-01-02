@@ -2,7 +2,7 @@
 //  sectionCollectionReusableView.m
 //  PENG
 //
-//  Created by 星盛 on 15/10/22.
+//  Created by BOOB on 15/10/22.
 //  Copyright © 2015年 YY.COM All rights reserved.
 //
 

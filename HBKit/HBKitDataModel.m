@@ -7,8 +7,8 @@
 //
 
 #import "HBKitDataModel.h"
-#import "CELL_STRUCT.h"
-#import "CELL_STRUCT_Common.h"
+#import "HBCellStruct.h"
+#import "HBCellStruct.h"
 
 //@implementation NSObject(hbkit) 
 //-(NSString *)key_indexpath:(int)section row:(int)row{
@@ -18,7 +18,7 @@
 
 @implementation HBKitDataModel
 
--(NSMutableDictionary *)dataDictionary{
+-(NSMutableDictionary<NSString * ,HBCellStruct *> *)dataDictionary{
     if (!_dataDictionary) {
         _dataDictionary = [NSMutableDictionary new];
     }
@@ -153,8 +153,8 @@
         
         [vclist.array enumerateObjectsUsingBlock:^(CELL_STRUCT * obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
-            obj.dictionarystring  = [self URLDecoding:obj.dictionarystring];
-            obj.dictionary = [NSMutableDictionary dictionaryWithDictionary: [self dictionaryWithJsonString:obj.dictionarystring]];
+//            obj.dictionarystring  = [self URLDecoding:obj.dictionarystring];
+//            obj.dictionary = [NSMutableDictionary dictionaryWithDictionary: [self dictionaryWithJsonString:obj.dictionarystring]];
             if (obj && [obj.key_indexpath containsString:@"section"] ) {
                 [self.dataDictionary setObject:obj forKey:obj.key_indexpath];
             }
