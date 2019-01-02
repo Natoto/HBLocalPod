@@ -2,10 +2,7 @@ Pod::Spec.new do |s|
 
   s.name         = "MBHUD"
   s.version      = "1.0.1"
-  s.summary      = "HUD"
-  s.description  = <<-DESC
-  		   Complete iOS camera engine with Vine-like tap to record, animated filters, slow motion, segments editing
-                   DESC 
+  s.summary      = "HUD" 
   s.homepage     = "https://github.com/natoto/HBLocalPod"
   s.license      = 'Apache License, Version 2.0'
   s.author             = { "Simon CORSIN" => "nonato@foxmail.com" }
