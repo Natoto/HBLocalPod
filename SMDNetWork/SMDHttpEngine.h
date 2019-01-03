@@ -14,7 +14,7 @@
 
 @property (nonatomic, strong) NSString * m_baseurl;
 + (instancetype)sharedInstance;
- 
+
 
 -(void)req_post_url:(NSString *)urlkey
               prama:(NSDictionary *)prama
@@ -35,5 +35,17 @@
              prama:(NSDictionary *)prama
       responsedata:(void (^)(NSData * jsondata))response
       errorHandler:(void (^)(NSError * err))err;
+
+-(NSURLSessionDownloadTask *)downloadwithurl:(NSString *)urlkey
+            progress:(void(^)(CGFloat progress))progress
+             error:(void(^)(NSError * error,NSString * localfilepath))derror;
+
+
+
+-(void)req_post_url:(NSString *)urlkey
+              prama:(NSDictionary *)prama
+               body:(NSDictionary *)body
+       responsedata:(void (^)(NSData * jsondata))response
+       errorHandler:(void (^)(NSError * err))err;
 
 @end

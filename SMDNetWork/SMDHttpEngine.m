@@ -23,15 +23,15 @@
         _sharedClient.requestSerializer.timeoutInterval = 20;//设置超时时间20秒
         _sharedClient.securityPolicy = [AFSecurityPolicy defaultPolicy];
         _sharedClient.reachabilityManager = [AFNetworkReachabilityManager sharedManager];
-          
+        
 //        _sharedClient.operationQueue = [[NSOperationQueue alloc] init];
 //        _sharedClient.shouldUseCredentialStorage = YES;
         // 设置请求格式
 //        _sharedClient.requestSerializer = [HBJSONRequestSerializer serializer];
         // 设置返回格式
         _sharedClient.responseSerializer = [AFHTTPResponseSerializer serializer];
-        [_sharedClient.requestSerializer setValue:@"gzip" forHTTPHeaderField:@"Content-Encoding"];
-        [_sharedClient.requestSerializer setValue:[NSString stringWithFormat:@"%@", [[NSLocale preferredLanguages] componentsJoinedByString:@", "]] forHTTPHeaderField:@"Accept-Language"];
+//        [_sharedClient.requestSerializer setValue:@"gzip" forHTTPHeaderField:@"Content-Encoding"];
+//        [_sharedClient.requestSerializer setValue:[NSString stringWithFormat:@"%@", [[NSLocale preferredLanguages] componentsJoinedByString:@", "]] forHTTPHeaderField:@"Accept-Language"];
     });
     return _sharedClient;
 }
@@ -83,6 +83,50 @@
     }];
 }
 
+
+
+-(void)req_post_url:(NSString *)urlkey
+              prama:(NSDictionary *)prama
+               body:(NSDictionary *)body
+       responsedata:(void (^)(NSData * jsondata))response
+       errorHandler:(void (^)(NSError * err))err
+{
+    NSString * urlstring = [NSString stringWithFormat:@"%@",[self getrequesturlwith:urlkey]];\
+    NSLog(@"\n req_post_url %@ body:%@",urlstring,body);\
+    
+    AFJSONRequestSerializer *requestSerializer =  [AFJSONRequestSerializer serializer];
+ 
+    self.requestSerializer = requestSerializer;
+    NSMutableURLRequest *request = [requestSerializer requestWithMethod:
+                                    @"POST" URLString:urlkey parameters:prama error:nil];
+//    [request addValue:@"application/json"forHTTPHeaderField:@"Content-Type"];
+    if(body)
+    {
+        NSError * error;
+        NSData * data =  [NSJSONSerialization dataWithJSONObject:body
+                                                         options:0
+                                                           error:&error];
+     
+        [request setHTTPBody:data];
+        
+    }
+    
+    [[self dataTaskWithRequest:request uploadProgress:^(NSProgress * _Nonnull uploadProgress) {
+        
+    } downloadProgress:^(NSProgress * _Nonnull downloadProgress) {
+        
+    } completionHandler:^(NSURLResponse * _Nonnull response0, NSData * responseObject, NSError * _Nullable error) {
+        if (!error) {
+            response(responseObject);
+        }else{
+            NSDictionary *userInfo = @{ AFNetworkingReachabilityNotificationStatusItem: @([AFNetworkReachabilityManager sharedManager].networkReachabilityStatus) };
+            [[NSNotificationCenter defaultCenter] postNotificationName:AFNetworkingReachabilityDidChangeNotification object:nil userInfo:userInfo];
+            response(nil);
+        }
+    }] resume];
+}
+
+
 -(void)req_get_url:(NSString *)urlkey
            response:(void (^)(NSString * jsonstring))response
        errorHandler:(void (^)(NSError * err))err
@@ -121,6 +165,43 @@
         err(error);\
     }];
     
+}
+
+-(NSURLSessionDownloadTask *)downloadwithurl:(NSString *)urlkey
+            progress:(void(^)(CGFloat progress))progress
+             error:(void(^)(NSError * error,NSString * localfilepath))derror{
+ 
+    AFHTTPSessionManager *session= [AFHTTPSessionManager manager];//[YYWebResourceDownloader sharedDownloader].afn_manager;
+    NSURLRequest *request=[NSURLRequest requestWithURL:[NSURL URLWithString:urlkey] cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:20];//超时20秒时间
+   
+    __weak __typeof(self)weakSelf = self;
+     NSURLSessionDownloadTask * _task = [session downloadTaskWithRequest:request progress:^(NSProgress * _Nonnull downloadProgress) {
+        //下载进度
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            if(progress) progress(downloadProgress.fractionCompleted);
+        }];
+        
+    } destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response) {
+        
+        return [targetPath URLByAppendingPathExtension:@"download"];
+    } completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
+        //下载完成了 路径类似 file:///private/var/mobile/Containers/Data/Application/EBF0BF23-E91C-4FE6-918A-25F741B8EF7A/tmp/CFNetworkDownload_0NlsXy.tmp.download
+        if (derror) {
+            derror(error,filePath.relativePath);
+        }
+        NSLog(@"下载完成了 %@  \n错误：%@",filePath,error.description);
+        if (!error) {
+        }
+        else{
+            if ([[NSFileManager defaultManager] fileExistsAtPath:filePath.relativePath]) {
+                NSLog(@"下载失败删除源文件！");
+                [[NSFileManager defaultManager] removeItemAtURL:filePath error:nil];
+            }
+        };
+    }];
+    [_task resume];
+    return _task;
+
 }
 
 @end

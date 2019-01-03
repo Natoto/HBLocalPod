@@ -11,5 +11,5 @@
 #define SMDNetWork_h
 
 #import "SMDHttpEngine.h"
-#import "Bee.h"
+//#import "Bee.h"
 #endif /* SMDNetWork_h */
